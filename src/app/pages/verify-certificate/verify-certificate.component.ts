@@ -16,7 +16,7 @@ import { StorageService } from '../../services/storage.service';
       </div>
     </div>
 
-    <section class="section" style="padding-bottom: 4rem;">
+    <section class="section" style="padding:3rem 0 4rem;">
       <div class="container">
         <div class="verify-layout">
 
@@ -98,7 +98,7 @@ import { StorageService } from '../../services/storage.service';
 
             <p style="margin-top:1rem;text-align:center;font-size:0.8rem;color:var(--gray-400);">
               Para assistência, contacte
-              <a href="mailto:contato&#64;ailungi.com" style="color:var(--primary);font-weight:500;">contato&#64;ailungi.com</a>
+              <a href="mailto:solucoes&#64;ilungi.ao" style="color:var(--primary);font-weight:500;">solucoes&#64;ilungi.ao</a>
             </p>
           </div>
 

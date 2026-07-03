@@ -34,12 +34,15 @@ import { StorageService } from '../../services/storage.service';
 
       <!-- Right Form Column -->
       <div class="auth-right">
-        <div class="form-card" style="width: 100%; max-width: 400px; box-shadow: none; padding: 0; background: transparent;">
+        <div style="max-width:400px; width:100%; margin:0 auto; padding: 0 1.25rem;">
+          <div style="text-align:center; margin-bottom:1rem;">
+            <a routerLink="/" style="text-decoration:none;">
+              <span class="logo-text" style="font-size:1.05rem; font-weight:800; color:var(--gray-900);">Ilungi<span style="color:var(--primary)">-Academia</span></span>
+            </a>
+          </div>
+          <div class="form-card" style="width: 100%; max-width: 400px; padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); background: white; box-shadow: var(--shadow-sm);">
           
           <div class="form-header">
-            <div class="logo-text" style="font-size:1.6rem; font-weight:800; color:var(--gray-900);">
-              Ilungi<span style="color:var(--primary)">-Academia</span>
-            </div>
             <h1 style="margin-top:1.25rem;">Bem-vindo de volta</h1>
             <p style="color:var(--gray-500); font-size:0.875rem; margin-top:0.375rem;">
               Entre na sua conta para continuar a sua formação
@@ -65,7 +68,7 @@ import { StorageService } from '../../services/storage.service';
                   name="email"
                   type="email"
                   required
-                  placeholder="exemplo@email.com"
+                   placeholder="solucoes@ilungi.ao"
                   style="border-radius: var(--radius-sm); border: 1.5px solid var(--gray-200); padding: 0.75rem 1rem; width: 100%; background: var(--white); font-size: 0.875rem;">
               </div>
             </div>
@@ -91,7 +94,7 @@ import { StorageService } from '../../services/storage.service';
                 <input type="checkbox" style="width:14px; height: 14px; padding:0; border-radius: 4px;">
                 <span style="color:var(--gray-600)">Lembrar-me</span>
               </label>
-              <a href="#" style="font-size:0.82rem; color:var(--primary); font-weight:600;">Esqueceu a senha?</a>
+              <a routerLink="/recuperar-senha" style="font-size:0.82rem; color:var(--primary); font-weight:600;">Esqueceu a senha?</a>
             </div>
 
             <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center; height: 42px; border-radius: var(--radius-sm); font-weight: 600;">

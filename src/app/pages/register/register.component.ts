@@ -34,12 +34,18 @@ import { StorageService } from '../../services/storage.service';
 
       <!-- Right Form Column -->
       <div class="auth-right">
-        <div class="form-card" style="width: 100%; max-width: 440px; box-shadow: none; padding: 0; background: transparent;">
+        <div style="max-width:440px; width:100%; margin:0 auto; padding: 0 1.25rem;">
+          <div style="text-align:center; margin-bottom:1rem;">
+            <a routerLink="/" style="text-decoration:none;">
+              <span class="logo-text" style="font-size:1.05rem; font-weight:800; color:var(--gray-900);">Ilungi<span style="color:var(--primary)">-Academia</span></span>
+            </a>
+          </div>
+        </div>
+
+        <div style="max-width:440px; width:100%; margin:0 auto; padding: 0 1.25rem;">
+          <div class="form-card" style="width: 100%; max-width: 440px; padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); background: white; box-shadow: var(--shadow-sm);">
           
           <div class="form-header" style="margin-bottom: 1.5rem;">
-            <div class="logo-text" style="font-size:1.6rem; font-weight:800; color:var(--gray-900);">
-              Ilungi<span style="color:var(--primary)">-Academia</span>
-            </div>
             <h1 style="margin-top:1rem; font-size: 1.75rem;">Crie a sua conta</h1>
             <p style="color:var(--gray-500); font-size:0.875rem; margin-top:0.25rem;">
               Comece a aprender hoje mesmo de forma profissional
@@ -107,7 +113,7 @@ import { StorageService } from '../../services/storage.service';
                   name="email"
                   type="email"
                   required
-                  placeholder="exemplo@email.com"
+                   placeholder="solucoes@ilungi.ao"
                   style="border-radius: var(--radius-sm); border: 1.5px solid var(--gray-200); padding: 0.75rem 1rem; width: 100%; background: var(--white); font-size: 0.85rem;">
               </div>
             </div>
@@ -167,9 +173,9 @@ import { StorageService } from '../../services/storage.service';
               <input type="checkbox" id="terms" required style="width:14px; height: 14px; margin-top:3px; flex-shrink:0;">
               <label for="terms" style="font-size:0.8rem; color:var(--gray-600); font-weight:400; cursor:pointer; line-height: 1.35;">
                 Eu aceito os
-                <a href="#" style="color:var(--primary); font-weight:600; text-decoration: underline;">Termos de Serviço</a>
+                <a (click)="$event.preventDefault(); readTerms()" style="color:var(--primary); font-weight:600; text-decoration: underline; cursor: pointer;">Termos de Serviço</a>
                 e
-                <a href="#" style="color:var(--primary); font-weight:600; text-decoration: underline;">Política de Privacidade</a>
+                <a (click)="$event.preventDefault(); readPrivacy()" style="color:var(--primary); font-weight:600; text-decoration: underline; cursor: pointer;">Política de Privacidade</a>
               </label>
             </div>
 
@@ -202,6 +208,14 @@ export class RegisterComponent {
     private router: Router,
     private storage: StorageService
   ) {}
+
+  readTerms() {
+    this.router.navigate(['/termos']);
+  }
+
+  readPrivacy() {
+    this.router.navigate(['/privacidade']);
+  }
 
   onSubmit() {
     this.errorMessage = '';

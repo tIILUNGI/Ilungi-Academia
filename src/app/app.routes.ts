@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'recuperar-senha',
+    loadComponent: () => import('./pages/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+  },
+  {
     path: 'area-do-aluno',
     loadComponent: () => import('./pages/student-area/student-area.component').then(m => m.StudentAreaComponent)
   },
@@ -28,6 +32,14 @@ export const routes: Routes = [
   {
     path: 'certificados/verificar',
     loadComponent: () => import('./pages/verify-certificate/verify-certificate.component').then(m => m.VerifyCertificateComponent)
+  },
+  {
+    path: 'termos',
+    loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent)
+  },
+  {
+    path: 'privacidade',
+    loadComponent: () => import('./pages/privacy/privacy.component').then(m => m.PrivacyComponent)
   },
   {
     path: '**',
