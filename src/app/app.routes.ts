@@ -23,7 +23,30 @@ export const routes: Routes = [
   },
   {
     path: 'area-do-aluno',
-    loadComponent: () => import('./pages/student-area/student-area.component').then(m => m.StudentAreaComponent)
+    loadComponent: () => import('./pages/student-area/student-area.component').then(m => m.StudentAreaComponent),
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      },
+      {
+        path: 'cursos',
+        loadComponent: () => import('./pages/my-courses/my-courses.component').then(m => m.MyCoursesComponent)
+      },
+      {
+        path: 'certificados',
+        loadComponent: () => import('./pages/my-certificates/my-certificates.component').then(m => m.MyCertificatesComponent)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+      },
+      {
+        path: 'comunidade',
+        loadComponent: () => import('./pages/community/community.component').then(m => m.CommunityComponent)
+      }
+    ]
   },
   {
     path: 'certificacoes',

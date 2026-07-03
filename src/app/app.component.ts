@@ -30,8 +30,9 @@ export class AppComponent {
       if (event instanceof NavigationEnd) {
         const url = event.urlAfterRedirects;
         const isAuth = url.includes('/login') || url.includes('/registro') || url.includes('/recuperar-senha');
-        this.showFooter = !isAuth;
-        this.showHeader = !isAuth;
+        const isStudentArea = url.includes('/area-do-aluno') || url.includes('/certificados');
+        this.showFooter = !isAuth && !isStudentArea;
+        this.showHeader = !isAuth && !isStudentArea;
       }
     });
   }

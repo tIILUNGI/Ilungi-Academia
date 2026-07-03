@@ -80,7 +80,7 @@ export class StorageService {
 
   saveUser(user: any): boolean {
     const users = this.getUsers();
-    const existingUser = users.find(u => u.email === user.email);
+    const existingUser = users.find((u: any) => u.email === user.email && (!user.provider || u.provider === user.provider));
     if (existingUser) {
       return false;
     }
@@ -106,6 +106,10 @@ export class StorageService {
 
   logout(): void {
     localStorage.removeItem(this.CURRENT_USER_KEY);
+  }
+
+  setCurrentUser(user: any): void {
+    localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
   }
 
   // Certificate methods

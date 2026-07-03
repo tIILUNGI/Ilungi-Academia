@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -41,7 +41,7 @@ import { StorageService } from '../../services/storage.service';
             </a>
           </div>
           <div class="form-card" style="width: 100%; max-width: 400px; padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); background: white; box-shadow: var(--shadow-sm);">
-          
+         
           <div class="form-header">
             <h1 style="margin-top:1.25rem;">Bem-vindo de volta</h1>
             <p style="color:var(--gray-500); font-size:0.875rem; margin-top:0.375rem;">
@@ -107,7 +107,7 @@ import { StorageService } from '../../services/storage.service';
           </div>
 
           <div style="display:grid; grid-template-columns:1fr; gap:0.75rem;">
-            <button class="btn btn-secondary" style="border-radius:var(--radius-sm); border:1px solid var(--gray-200); height: 40px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500; font-size: 0.875rem; background: var(--white);">
+            <button (click)="signInWithGoogle()" class="btn btn-secondary" style="border-radius:var(--radius-sm); border:1px solid var(--gray-200); height: 40px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500; font-size: 0.875rem; background: var(--white);">
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -128,15 +128,114 @@ import { StorageService } from '../../services/storage.service';
     </div>
   `
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   email = '';
   password = '';
   errorMessage = '';
+  private googleClientId = '100123456789-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com';
 
   constructor(
     private router: Router,
     private storage: StorageService
   ) {}
+
+  ngOnInit(): void {
+    this.loadGoogleScript();
+  }
+
+  private loadGoogleScript(): void {
+    if (typeof (window as any).google !== 'undefined') {
+      this.initializeGoogleSignIn();
+      return;
+    }
+    const checkGoogle = setInterval(() => {
+      if (typeof (window as any).google !== 'undefined') {
+        clearInterval(checkGoogle);
+        this.initializeGoogleSignIn();
+      }
+    }, 100);
+  }
+
+  private initializeGoogleSignIn(): void {
+    const google = (window as any).google;
+    if (google && google.accounts) {
+      google.accounts.id.initialize({
+        client_id: this.googleClientId,
+        callback: (response: any) => this.handleGoogleResponse(response),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+    }
+  }
+
+  private decodeJwtResponse(token: string): any {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c: string) => {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  }
+
+  private handleGoogleResponse(response: any): void {
+    const userData = this.decodeJwtResponse(response.credential);
+    const user = {
+      id: userData.sub || Date.now().toString(),
+      email: userData.email,
+      name: userData.name,
+      picture: userData.picture,
+      provider: 'google'
+    };
+    
+    const users = this.storage.getUsers();
+    const existingUser = users.find((u: any) => u.email === user.email && u.provider === 'google');
+    
+    if (!existingUser) {
+      this.storage.saveUser(user);
+    }
+    
+    this.storage.setCurrentUser(user);
+    this.router.navigate(['/area-do-aluno']);
+  }
+
+  signInWithGoogle(): void {
+    const google = (window as any).google;
+    if (google && google.accounts && google.accounts.oauth2) {
+      const tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: this.googleClientId,
+        scope: 'email profile',
+        callback: (response: any) => {
+          if (response.access_token) {
+            fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+              headers: { Authorization: `Bearer ${response.access_token}` }
+            }).then((res: any) => res.json()).then((userData: any) => {
+              const user = {
+                id: userData.sub || Date.now().toString(),
+                email: userData.email,
+                name: userData.name,
+                picture: userData.picture,
+                provider: 'google'
+              };
+              const users = this.storage.getUsers();
+              const existingUser = users.find((u: any) => u.email === user.email && u.provider === 'google');
+              if (!existingUser) {
+                this.storage.saveUser(user);
+              }
+              this.storage.setCurrentUser(user);
+              this.router.navigate(['/area-do-aluno']);
+            });
+          } else {
+            this.errorMessage = 'Falha no login com Google. Tente novamente.';
+          }
+        }
+      });
+      tokenClient.requestAccessToken();
+    } else if (google && google.accounts) {
+      google.accounts.id.prompt();
+    } else {
+      this.errorMessage = 'Erro ao carregar o serviço do Google. Tente novamente.';
+    }
+  }
 
   onSubmit() {
     this.errorMessage = '';
