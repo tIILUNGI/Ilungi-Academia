@@ -120,32 +120,32 @@ import { CommonModule } from '@angular/common';
           <div class="modal-body">
             <span class="badge badge-primary">{{ selectedCourse.category }}</span>
             <p style="margin:1rem 0 1.5rem;">{{ selectedCourse.description }}</p>
-            <div class="course-details-grid">
-              <div class="detail-item">
-                <span class="detail-label">Modality</span>
-                <span class="detail-value">{{ selectedCourse.modality }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Duration</span>
-                <span class="detail-value">{{ selectedCourse.duration }}h</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Workload</span>
-                <span class="detail-value">{{ selectedCourse.workload }}h</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Level</span>
-                <span class="detail-value">{{ selectedCourse.level }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Certificate</span>
-                <span class="detail-value">{{ selectedCourse.certificate ? 'Included' : 'Not Included' }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Start Date</span>
-                <span class="detail-value">{{ selectedCourse.startDate }}</span>
-              </div>
-            </div>
+<div class="course-details-grid">
+               <div class="detail-item">
+                 <span class="detail-label">Modalidade</span>
+                 <span class="detail-value">{{ selectedCourse.modality }}</span>
+               </div>
+               <div class="detail-item">
+                 <span class="detail-label">Duração</span>
+                 <span class="detail-value">{{ selectedCourse.duration }}h</span>
+               </div>
+               <div class="detail-item">
+                 <span class="detail-label">Carga Horária</span>
+                 <span class="detail-value">{{ selectedCourse.workload }}h</span>
+               </div>
+               <div class="detail-item">
+                 <span class="detail-label">Nível</span>
+                 <span class="detail-value">{{ selectedCourse.level }}</span>
+               </div>
+               <div class="detail-item">
+                 <span class="detail-label">Certificado</span>
+                 <span class="detail-value">{{ selectedCourse.certificate ? 'Incluído' : 'Não Incluído' }}</span>
+               </div>
+               <div class="detail-item">
+                 <span class="detail-label">Início</span>
+                 <span class="detail-value">{{ selectedCourse.startDate }}</span>
+               </div>
+             </div>
             <div class="modal-price">
               <span class="course-price">{{ selectedCourse.price }}</span>
             </div>
@@ -313,10 +313,10 @@ export class HomeComponent {
     { label: 'Conclusão', pct: '85%' },
   ];
 
-  statsBar = [
-    { value: '500+', label: 'meta Alumni' },
+statsBar = [
+    { value: '500+', label: 'Alumni' },
     { value: '30+', label: 'Cursos Disponíveis' },
-    { value: '10+', label: 'Instrutores Especializados' },
+    { value: '15+', label: 'Instrutores Especializados' },
     { value: '80%', label: 'Taxa de Satisfação' },
   ];
 
