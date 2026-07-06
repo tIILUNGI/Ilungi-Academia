@@ -47,9 +47,6 @@ import { StorageService } from '../../services/storage.service';
           
           <div class="form-header" style="margin-bottom: 1.5rem;">
             <h1 style="margin-top:1rem; font-size: 1.75rem;">Crie a sua conta</h1>
-            <p style="color:var(--gray-500); font-size:0.875rem; margin-top:0.25rem;">
-              Comece a aprender hoje mesmo de forma profissional
-            </p>
           </div>
 
           @if (successMessage) {

@@ -22,10 +22,10 @@ import { RouterLink } from '@angular/router';
           </a>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">1. Aceitação dos Termos</h2>
-          <p style="margin-bottom: 1.5rem;">Ao aceder e utilizar a plataforma Ilungi-Academia, você concorda em cumprir e ficar vinculado a estes Termos de Serviço. Caso não concorde, não utilize a plataforma.</p>
+          <p style="margin-bottom: 1.5rem;">Ao aceder e utilizar a plataforma Academia Ilungi, você concorda em cumprir e ficar vinculado a estes Termos de Serviço. Caso não concorde, não utilize a plataforma.</p>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">2. Descrição do Serviço</h2>
-          <p style="margin-bottom: 1.5rem;">A Ilungi-Academia oferece cursos online, certificações profissionais e serviços de educação à distância em Angola. Os conteúdos são disponibilizados para fins de formação profissional.</p>
+          <p style="margin-bottom: 1.5rem;">A Academia Ilungi oferece cursos online, certificações profissionais e serviços de educação à distância em Angola. Os conteúdos são disponibilizados para fins de formação profissional.</p>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">3. Conta do Utilizador</h2>
           <p style="margin-bottom: 1.5rem;">Você é responsável por manter a confidencialidade das suas credenciais e por todas as atividades realizadas na sua conta. Notifique-nos imediatamente sobre qualquer uso não autorizado.</p>
@@ -34,10 +34,10 @@ import { RouterLink } from '@angular/router';
           <p style="margin-bottom: 1.5rem;">Os pagamentos são processados de acordo com os preços apresentados no catálogo. Reembolsos podem ser solicitados no prazo de 7 dias após a compra, desde que nenhum certificado tenha sido emitido.</p>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">5. Propriedade Intelectual</h2>
-          <p style="margin-bottom: 1.5rem;">Todo o conteúdo da plataforma — textos, vídeos, imagens e marcas — é propriedade da Ilungi-Academia. É proibida a reprodução ou distribuição sem autorização prévia por escrito.</p>
+          <p style="margin-bottom: 1.5rem;">Todo o conteúdo da plataforma — textos, vídeos, imagens e marcas — é propriedade da Academia Ilungi. É proibida a reprodução ou distribuição sem autorização prévia por escrito.</p>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">6. Limitação de Responsabilidade</h2>
-          <p style="margin-bottom: 1.5rem;">A Ilungi-Academia não se responsabiliza por danos diretos ou indiretos resultantes do uso da plataforma. O serviço é fornecido "como está", sem garantias de resultados profissionais específicos.</p>
+          <p style="margin-bottom: 1.5rem;">A Academia Ilungi não se responsabiliza por danos diretos ou indiretos resultantes do uso da plataforma. O serviço é fornecido "como está", sem garantias de resultados profissionais específicos.</p>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">7. Contacto</h2>
           <p style="margin-bottom: 0;">Para questões sobre estes Termos, contacte-nos em <a href="mailto:solucoes&#64;ilungi.ao" style="color: var(--primary); font-weight: 600;">solucoes&#64;ilungi.ao</a>.</p>

@@ -11,9 +11,9 @@ import { RouterLink } from '@angular/router';
         <div class="footer-grid">
           <!-- Brand -->
           <div class="footer-brand">
-            <div class="logo-text">Ilungi<span>-Academia</span></div>
+            <div class="logo-text">Academia<span>-Ilungi</span></div>
             <p>
-              Plataforma de cursos online e certificações profissionais reconhecidas.
+              Plataforma de cursos online e certificações profissionais.
               Aprenda com os melhores especialistas e avance na sua carreira.
             </p>
           </div>
@@ -40,7 +40,7 @@ import { RouterLink } from '@angular/router';
         </div>
 
         <div class="footer-bottom">
-          <p>© {{ currentYear }} Ilungi-Academia. Todos os direitos reservados.</p>
+          <p>© {{ currentYear }} Academia Ilungi. Todos os direitos reservados.</p>
           <a routerLink="/sitemap">Mapa do Site</a>
         </div>
       </div>

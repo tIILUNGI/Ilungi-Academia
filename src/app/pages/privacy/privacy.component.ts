@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
           </a>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">1. Informação que Coletamos</h2>
-          <p style="margin-bottom: 1.5rem;">Ao criar uma conta na Ilungi-Academia, coletamos nome, email, telefone e dados de pagamento. Também registamos interações na plataforma para melhorar a experiência de formação.</p>
+          <p style="margin-bottom: 1.5rem;">Ao criar uma conta na Academia Ilungi, coletamos nome, email, telefone e dados de pagamento. Também registamos interações na plataforma para melhorar a experiência de formação.</p>
 
           <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">2. Uso dos Dados</h2>
           <p style="margin-bottom: 1.5rem;">Os seus dados são utilizados para: gerir a conta, processar inscrições, emitir certificados, enviar comunicações relevantes e melhorar os nossos serviços. Não partilhamos dados com terceiros sem o seu consentimento, exceto quando exigido por lei.</p>

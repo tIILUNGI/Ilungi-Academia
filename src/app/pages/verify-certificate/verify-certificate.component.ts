@@ -12,7 +12,7 @@ import { StorageService } from '../../services/storage.service';
       <div class="container">
         <span class="section-label">Autenticidade</span>
         <h1>Verificar Certificado</h1>
-        <p>Confirme a autenticidade de qualquer certificado emitido pela Ilungi-Academia.</p>
+        <p>Confirme a autenticidade de qualquer certificado emitido pela Academia Ilungi.</p>
       </div>
     </div>
 
@@ -116,7 +116,7 @@ import { StorageService } from '../../services/storage.service';
             <div class="card" style="padding:1.5rem;background:linear-gradient(135deg,#ede9fe,#dbeafe);">
               <h3 style="font-size:0.95rem;font-weight:700;color:var(--primary);margin-bottom:0.5rem;">Porquê verificar?</h3>
               <p style="font-size:0.82rem;color:var(--gray-600);line-height:1.65;">
-                A verificação garante que o certificado é autêntico e emitido oficialmente pela Ilungi-Academia, protegendo empregadores e o titular.
+                A verificação garante que o certificado é autêntico e emitido oficialmente pela Academia Ilungi, protegendo empregadores e o titular.
               </p>
             </div>
           </div>

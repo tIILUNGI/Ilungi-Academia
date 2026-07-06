@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 
           <!-- Logo -->
           <a routerLink="/" class="header-logo">
-            <div class="logo-text">Ilungi<span>-Academia</span></div>
+            <div class="logo-text">Academia<span>-Ilungi</span></div>
           </a>
 
           <!-- Navigation Desktop -->

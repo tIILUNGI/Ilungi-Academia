@@ -27,7 +27,7 @@ import { StorageService } from '../../services/storage.service';
             <div class="brand-title">Ilungi<span>-Academia</span></div>
             <p class="brand-desc">Excelência em Educação Profissional</p>
             <div class="brand-line"></div>
-            <p class="brand-desc-sm">Transforme a sua carreira com os nossos cursos online e certificações reconhecidas.</p>
+            <p class="brand-desc-sm">Transforme a sua carreira com os nossos cursos online e certificações .</p>
           </div>
         </div>
       </div>
@@ -43,10 +43,7 @@ import { StorageService } from '../../services/storage.service';
           <div class="form-card" style="width: 100%; max-width: 400px; padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); background: white; box-shadow: var(--shadow-sm);">
          
           <div class="form-header">
-            <h1 style="margin-top:1.25rem;">Bem-vindo de volta</h1>
-            <p style="color:var(--gray-500); font-size:0.875rem; margin-top:0.375rem;">
-              Entre na sua conta para continuar a sua formação
-            </p>
+            <h1 style="margin-top:1.25rem;">Bem-vindo</h1>
           </div>
 
           @if (errorMessage) {

@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
       <div class="container">
         <span class="section-label">Certificações</span>
         <h1>Certificações Profissionais</h1>
-        <p>Obtenha certificações reconhecidas que impulsionam a sua carreira no mercado angolano e internacional.</p>
+        <p>Obtenha certificações que impulsionam a sua carreira no mercado angolano e internacional.</p>
       </div>
     </div>
 
@@ -58,7 +58,7 @@ import { CommonModule } from '@angular/common';
       <div class="container">
         <div class="cta-section">
           <h2>Obtenha a sua certificação</h2>
-          <p>Inscreva-se num curso e conquiste a sua certificação profissional com a Ilungi-Academia.</p>
+          <p>Inscreva-se num curso e conquiste a sua certificação profissional com a Academia Ilungi.</p>
           <div class="cta-actions">
             <a routerLink="/cursos" class="btn btn-white btn-lg">Ver Cursos Disponíveis</a>
             <a routerLink="/registro" class="btn btn-outline-white btn-lg">Criar Conta</a>

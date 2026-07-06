@@ -20,8 +20,8 @@ import { CommonModule } from '@angular/common';
             <h1 class="animate-on-load delay-1">Aprenda sem <span class="text-gradient">fronteiras</span></h1>
 
             <p class="hero-description animate-on-load delay-2">
-              Transforme a sua carreira com os nossos cursos online e certificações reconhecidas.
-              Aprenda com especialistas e conquiste o seu futuro com a <strong>Ilungi-Academia</strong>.
+              Transforme a sua carreira com os nossos cursos online e certificações.
+              Aprenda com especialistas e conquiste o seu futuro com a <strong>Academia Ilungi</strong>.
             </p>
 
             <div class="hero-actions animate-on-load delay-3">
@@ -96,7 +96,7 @@ import { CommonModule } from '@angular/common';
                     <span class="course-price">{{ course.price }}</span>
                     <p style="font-size:0.72rem;color:var(--gray-400);margin-top:2px;">{{ course.duration }}h de conteúdo</p>
                   </div>
-                  <a [routerLink]="['/cursos', course.id]" class="btn btn-ghost btn-sm">Ver Detalhes</a>
+                  <button (click)="openCourseModal(course)" class="btn btn-ghost btn-sm">Ver Detalhes</button>
                 </div>
               </div>
             </div>
@@ -109,13 +109,58 @@ import { CommonModule } from '@angular/common';
       </div>
     </section>
 
+    <!-- Course Details Modal -->
+    @if (selectedCourse) {
+      <div class="modal-overlay" (click)="closeCourseModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>{{ selectedCourse.title }}</h2>
+            <button (click)="closeCourseModal()" class="modal-close">&times;</button>
+          </div>
+          <div class="modal-body">
+            <span class="badge badge-primary">{{ selectedCourse.category }}</span>
+            <p style="margin:1rem 0 1.5rem;">{{ selectedCourse.description }}</p>
+            <div class="course-details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Modality</span>
+                <span class="detail-value">{{ selectedCourse.modality }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Duration</span>
+                <span class="detail-value">{{ selectedCourse.duration }}h</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Workload</span>
+                <span class="detail-value">{{ selectedCourse.workload }}h</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Level</span>
+                <span class="detail-value">{{ selectedCourse.level }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Certificate</span>
+                <span class="detail-value">{{ selectedCourse.certificate ? 'Included' : 'Not Included' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Start Date</span>
+                <span class="detail-value">{{ selectedCourse.startDate }}</span>
+              </div>
+            </div>
+            <div class="modal-price">
+              <span class="course-price">{{ selectedCourse.price }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- Why Ilungi -->
     <section class="section section-alt" style="margin-top: 5rem; padding-top: 5rem; padding-bottom: 5rem; margin-bottom: 3rem;">
       <div class="container">
         <div class="section-header">
           <span class="section-label">Por que nos escolher</span>
           <h2 class="section-title">O que nos diferencia</h2>
-          <p class="section-subtitle">A Ilungi-Academia oferece uma experiência de aprendizagem única e adaptada ao mercado angolano.</p>
+          <p class="section-subtitle">A Academia Ilungi oferece uma experiência de aprendizagem única e adaptada ao mercado angolano.</p>
         </div>
         <div class="features-grid">
           @for (f of features; track f.title) {
@@ -172,6 +217,82 @@ import { CommonModule } from '@angular/common';
       color: var(--gray-500);
       line-height: 1.65;
     }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 1rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin: 0;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-500);
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-body {
+      padding: 1.5rem;
+    }
+    .course-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .detail-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+    }
+    .detail-value {
+      font-size: 0.875rem;
+      color: var(--gray-900);
+    }
+    .modal-price {
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-200);
+    }
     @media (max-width: 900px) {
       .features-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -188,22 +309,23 @@ export class HomeComponent {
   ];
 
   progressStats = [
-    { label: 'Satisfação', pct: '98%' },
+    { label: 'Satisfação', pct: '80%' },
     { label: 'Conclusão', pct: '85%' },
-    { label: 'Empregabilidade', pct: '92%' },
   ];
 
   statsBar = [
-    { value: '500+', label: 'Alunos Matriculados' },
+    { value: '500+', label: 'Alumni' },
     { value: '30+', label: 'Cursos Disponíveis' },
-    { value: '15+', label: 'Instrutores Especializados' },
-    { value: '98%', label: 'Taxa de Satisfação' },
+    { value: '10+', label: 'Instrutores Especializados' },
+    { value: '80%', label: 'Taxa de Satisfação' },
   ];
 
+  selectedCourse: any = null;
+
   featuredCourses = [
-    { id: 1, title: 'Gestão de Projetos', description: 'Aprenda as melhores práticas de gestão de projetos do zero ao avançado.', category: 'Gestão', price: 'AOA 15.000', duration: 40 },
-    { id: 2, title: 'Desenvolvimento Web', description: 'Domine HTML, CSS, JavaScript e frameworks modernos.', category: 'Tecnologia', price: 'AOA 20.000', duration: 60 },
-    { id: 3, title: 'Liderança e Gestão de Equipas', description: 'Desenvolva habilidades de liderança e gestão de equipas eficazes.', category: 'Liderança', price: 'AOA 18.000', duration: 30 },
+    { id: 1, title: 'Gestão de Projetos', description: 'Aprenda as melhores práticas de gestão de projetos do zero ao avançado.', category: 'Gestão', price: 'AOA 15.000', duration: 40, modality: 'Online', workload: 40, level: 'Beginner to Advanced', certificate: true, startDate: 'Next cohort: July 2026' },
+    { id: 2, title: 'Desenvolvimento Web', description: 'Domine HTML, CSS, JavaScript e frameworks modernos.', category: 'Tecnologia', price: 'AOA 20.000', duration: 60, modality: 'Live Sessions', workload: 60, level: 'Intermediate', certificate: true, startDate: 'Next cohort: August 2026' },
+    { id: 3, title: 'Liderança e Gestão de Equipas', description: 'Desenvolva habilidades de liderança e gestão de equipas eficazes.', category: 'Liderança', price: 'AOA 18.000', duration: 30, modality: 'Hybrid', workload: 30, level: 'All Levels', certificate: true, startDate: 'Next cohort: September 2026' },
   ];
 
   features = [
@@ -214,4 +336,12 @@ export class HomeComponent {
     { title: 'Comunidade Activa', desc: 'Faça parte de uma comunidade vibrante de alunos e profissionais.' },
     { title: 'Acessibilidade', desc: 'Plataforma acessível a partir de qualquer dispositivo — computador, tablet ou smartphone.' },
   ];
+
+  openCourseModal(course: any) {
+    this.selectedCourse = course;
+  }
+
+  closeCourseModal() {
+    this.selectedCourse = null;
+  }
 }

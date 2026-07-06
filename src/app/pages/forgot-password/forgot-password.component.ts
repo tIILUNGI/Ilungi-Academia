@@ -25,7 +25,7 @@ import { StorageService } from '../../services/storage.service';
             <div class="brand-title">Ilungi<span>-Academia</span></div>
             <p class="brand-desc">Excelência em Educação Profissional</p>
             <div class="brand-line"></div>
-            <p class="brand-desc-sm">Transforme a sua carreira com os nossos cursos online e certificações reconhecidas.</p>
+            <p class="brand-desc-sm">Transforme a sua carreira com os nossos cursos online e certificações.</p>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@ import { StorageService } from '../../services/storage.service';
         <div style="max-width:400px; width:100%; margin:0 auto; padding: 0 1.25rem;">
           <div style="text-align:center; margin-bottom:1rem;">
             <a routerLink="/" style="text-decoration:none;">
-              <span class="logo-text" style="font-size:1.05rem; font-weight:800; color:var(--gray-900);">Ilungi<span style="color:var(--primary)">-Academia</span></span>
+              <span class="logo-text" style="font-size:1.05rem; font-weight:800; color:var(--gray-900);">Academia<span style="color:var(--primary)">Ilungi</span></span>
             </a>
           </div>
         </div>
