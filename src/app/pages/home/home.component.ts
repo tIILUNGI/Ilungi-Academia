@@ -314,7 +314,7 @@ export class HomeComponent {
   ];
 
   statsBar = [
-    { value: '500+', label: 'Alumni' },
+    { value: '500+', label: 'meta Alumni' },
     { value: '30+', label: 'Cursos Disponíveis' },
     { value: '10+', label: 'Instrutores Especializados' },
     { value: '80%', label: 'Taxa de Satisfação' },

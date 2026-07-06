@@ -22,6 +22,7 @@ import { RouterLink } from '@angular/router';
           <div class="footer-col">
             <h4>Plataforma</h4>
             <nav class="footer-links">
+              <a routerLink="/">Início</a>
               <a routerLink="/cursos">Catálogo de Cursos</a>
               <a routerLink="/certificacoes">Certificações</a>
               <a routerLink="/certificados/verificar">Verificar Certificados</a>

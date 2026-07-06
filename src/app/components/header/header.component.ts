@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 
           <!-- Navigation Desktop -->
           <nav class="header-nav">
+            <a routerLink="/" routerLinkActive="active">Início</a>
             <a routerLink="/cursos" routerLinkActive="active">Catálogo de Cursos</a>
             <a routerLink="/certificacoes" routerLinkActive="active">Certificações</a>
             <a routerLink="/certificados/verificar" routerLinkActive="active">Verificar Certificados</a>
@@ -44,6 +45,7 @@ import { CommonModule } from '@angular/common';
         <!-- Mobile Menu -->
         @if (isMenuOpen) {
           <nav class="mobile-nav">
+            <a routerLink="/" (click)="closeMenu()">Início</a>
             <a routerLink="/cursos" (click)="closeMenu()">Catálogo de Cursos</a>
             <a routerLink="/certificacoes" (click)="closeMenu()">Certificações</a>
             <a routerLink="/certificados/verificar" (click)="closeMenu()">Verificar Certificados</a>
