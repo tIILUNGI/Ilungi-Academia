@@ -1,5 +1,13 @@
 import { Routes } from '@angular/router';
 
+// A simple external redirect route guard/function
+const redirectExternal = (url: string) => {
+  return () => {
+    window.location.href = url;
+    return false;
+  };
+};
+
 export const routes: Routes = [
   {
     path: '',
@@ -8,57 +16,6 @@ export const routes: Routes = [
   {
     path: 'cursos',
     loadComponent: () => import('./pages/courses/courses.component').then(m => m.CoursesComponent)
-  },
-  {
-    path: 'login',
-    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
-  },
-  {
-    path: 'registro',
-    loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
-  },
-  {
-    path: 'recuperar-senha',
-    loadComponent: () => import('./pages/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
-  },
-  {
-    path: 'area-do-aluno',
-    loadComponent: () => import('./pages/student-area/student-area.component').then(m => m.StudentAreaComponent),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
-      },
-      {
-        path: 'cursos',
-        loadComponent: () => import('./pages/my-courses/my-courses.component').then(m => m.MyCoursesComponent)
-      },
-      {
-        path: 'cursos-disponiveis',
-        loadComponent: () => import('./pages/courses/courses.component').then(m => m.CoursesComponent)
-      },
-      {
-        path: 'certificados',
-        loadComponent: () => import('./pages/my-certificates/my-certificates.component').then(m => m.MyCertificatesComponent)
-      },
-      {
-        path: 'perfil',
-        loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
-      },
-      {
-        path: 'comunidade',
-        loadComponent: () => import('./pages/community/community.component').then(m => m.CommunityComponent)
-      },
-      {
-        path: 'comunidade/:forumId',
-        loadComponent: () => import('./pages/community/forum-details/forum-details.component').then(m => m.ForumDetailsComponent)
-      },
-      {
-        path: 'notificacoes',
-        loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent)
-      }
-    ]
   },
   {
     path: 'certificacoes',
@@ -76,8 +33,29 @@ export const routes: Routes = [
     path: 'privacidade',
     loadComponent: () => import('./pages/privacy/privacy.component').then(m => m.PrivacyComponent)
   },
+  // Redirect internal system paths to the Apk app
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/redirect/redirect.component').then(m => m.RedirectComponent),
+    canActivate: [redirectExternal('http://localhost:3000')]
+  },
+  {
+    path: 'registro',
+    loadComponent: () => import('./pages/redirect/redirect.component').then(m => m.RedirectComponent),
+    canActivate: [redirectExternal('http://localhost:3000?view=register')]
+  },
+  {
+    path: 'recuperar-senha',
+    loadComponent: () => import('./pages/redirect/redirect.component').then(m => m.RedirectComponent),
+    canActivate: [redirectExternal('http://localhost:3000?view=forgot-password')]
+  },
+  {
+    path: 'area-do-aluno',
+    loadComponent: () => import('./pages/redirect/redirect.component').then(m => m.RedirectComponent),
+    canActivate: [redirectExternal('http://localhost:3000')]
+  },
   {
     path: '**',
     redirectTo: ''
   }
-];
+];
