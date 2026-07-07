@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-courses',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink, CommonModule, FormsModule],
   template: `
     <!-- Page Hero -->
     <div class="page-hero">
@@ -20,20 +22,55 @@ import { CommonModule } from '@angular/common';
     <section class="section" style="padding-bottom: 4rem;">
       <div class="container">
         <!-- Filter Bar -->
-        <div class="filter-bar">
-          <span style="font-size:0.85rem; font-weight:600; color:var(--gray-500);">Filtrar:</span>
-          @for (cat of categories; track cat) {
-            <button
-              class="filter-btn"
-              [class.active]="activeCategory === cat"
-              (click)="setCategory(cat)">
-              {{ cat }}
-            </button>
-          }
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;">
+          <div class="filter-bar">
+            <span style="font-size:0.85rem; font-weight:600; color:var(--gray-500);">Filtrar:</span>
+            @for (cat of categories; track cat) {
+              <button
+                class="filter-btn"
+                [class.active]="activeCategory === cat"
+                (click)="setCategory(cat)">
+                {{ cat }}
+              </button>
+            }
+          </div>
+
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+            <div style="flex:1;min-width:220px;position:relative;">
+              <input
+                type="text"
+                [(ngModel)]="searchQuery"
+                (input)="onSearch()"
+                placeholder="Pesquisar cursos..."
+                style="width:100%;padding:0.6rem 1rem 0.6rem 2.5rem;border:1px solid var(--gray-200);border-radius:8px;font-size:0.875rem;outline:none;">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--gray-400)" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+
+            <select [(ngModel)]="selectedLevel" (ngModelChange)="onFilter()" style="padding:0.6rem 1rem;border:1px solid var(--gray-200);border-radius:8px;font-size:0.875rem;outline:none;background:white;">
+              <option value="">Todos os níveis</option>
+              <option value="Beginner">Iniciante</option>
+              <option value="Intermediate">Intermédio</option>
+              <option value="Advanced">Avançado</option>
+              <option value="All Levels">Todos os níveis</option>
+            </select>
+
+            <select [(ngModel)]="sortBy" (ngModelChange)="onFilter()" style="padding:0.6rem 1rem;border:1px solid var(--gray-200);border-radius:8px;font-size:0.875rem;outline:none;background:white;">
+              <option value="featured">Destaque</option>
+              <option value="price-asc">Preço: menor para maior</option>
+              <option value="price-desc">Preço: maior para menor</option>
+              <option value="duration">Duração</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="font-size:0.85rem;color:var(--gray-500);margin-bottom:1.5rem;">
+          {{ filteredAndSortedCourses.length }} curso(s) encontrado(s)
         </div>
 
         <div class="grid-courses">
-          @for (course of filteredCourses; track course.id) {
+          @for (course of paginatedCourses; track course.id) {
             <div class="card card-course">
               <div class="card-course-thumb">
                 <svg width="52" height="52" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,6 +84,7 @@ import { CommonModule } from '@angular/common';
                   @if (course.featured) {
                     <span class="badge" style="background:rgba(245,158,11,0.12); color:#b45309;">Destaque</span>
                   }
+                  <span class="badge" style="background:var(--gray-50);color:var(--gray-700);border:1px solid var(--gray-200);">{{ course.level }}</span>
                 </div>
                 <h3 class="card-course-title">{{ course.title }}</h3>
                 <p class="card-course-desc">{{ course.description }}</p>
@@ -61,6 +99,22 @@ import { CommonModule } from '@angular/common';
             </div>
           }
         </div>
+
+        @if (totalPages > 1) {
+          <div style="display:flex;justify-content:center;align-items:center;gap:0.5rem;margin-top:2.5rem;">
+            <button class="btn btn-ghost btn-sm" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+            @for (page of pages; track page) {
+              <button
+                class="btn btn-sm"
+                [class.btn-primary]="currentPage === page"
+                [class.btn-ghost]="currentPage !== page"
+                (click)="goToPage(page)">
+                {{ page }}
+              </button>
+            }
+            <button class="btn btn-ghost btn-sm" (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>
+          </div>
+        }
       </div>
     </section>
 
@@ -77,35 +131,41 @@ import { CommonModule } from '@angular/common';
             @if (selectedCourse.featured) {
               <span class="badge" style="background:rgba(245,158,11,0.12); color:#b45309; margin-left:0.5rem;">Destaque</span>
             }
+            <span class="badge" style="background:var(--gray-50);color:var(--gray-700);border:1px solid var(--gray-200);margin-left:0.5rem;">{{ selectedCourse.level }}</span>
             <p style="margin:1rem 0 1.5rem;">{{ selectedCourse.description }}</p>
-<div class="course-details-grid">
-               <div class="detail-item">
-                 <span class="detail-label">Modalidade</span>
-                 <span class="detail-value">{{ selectedCourse.modality }}</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Duração</span>
-                 <span class="detail-value">{{ selectedCourse.duration }}h</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Carga Horária</span>
-                 <span class="detail-value">{{ selectedCourse.workload }}h</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Nível</span>
-                 <span class="detail-value">{{ selectedCourse.level }}</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Certificado</span>
-                 <span class="detail-value">{{ selectedCourse.certificate ? 'Incluído' : 'Não Incluído' }}</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Início</span>
-                 <span class="detail-value">{{ selectedCourse.startDate }}</span>
-               </div>
-             </div>
+            <div class="course-details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Modalidade</span>
+                <span class="detail-value">{{ selectedCourse.modality }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Duração</span>
+                <span class="detail-value">{{ selectedCourse.duration }}h</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Carga Horária</span>
+                <span class="detail-value">{{ selectedCourse.workload }}h</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Nível</span>
+                <span class="detail-value">{{ selectedCourse.level }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Certificado</span>
+                <span class="detail-value">{{ selectedCourse.certificate ? 'Incluído' : 'Não Incluído' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Início</span>
+                <span class="detail-value">{{ selectedCourse.startDate }}</span>
+              </div>
+            </div>
             <div class="modal-price">
               <span class="course-price">{{ selectedCourse.price }}</span>
+              @if (selectedCourse.enrolled) {
+                <p style="font-size:0.9rem;color:#059669;margin-top:0.5rem;">✓ Você já está inscrito neste curso</p>
+              } @else {
+                <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem;height:44px;" (click)="enroll(selectedCourse)">Inscrever-se Agora</button>
+              }
             </div>
           </div>
         </div>
@@ -194,16 +254,24 @@ import { CommonModule } from '@angular/common';
 export class CoursesComponent {
   activeCategory = 'Todos';
   selectedCourse: any = null;
+  searchQuery = '';
+  selectedLevel = '';
+  sortBy = 'featured';
+  currentPage = 1;
+  pageSize = 6;
 
   categories = ['Todos', 'Gestão', 'Tecnologia', 'Liderança', 'Marketing', 'Soft Skills'];
 
   courses = [
-    { id: 1, title: 'Gestão de Projetos', description: 'Aprenda as melhores práticas de gestão de projetos do zero ao avançado.', category: 'Gestão', price: 'AOA 15.000', duration: 40, modality: 'Online', workload: 40, level: 'Beginner to Advanced', certificate: true, startDate: 'Next cohort: July 2026', featured: true },
-    { id: 2, title: 'Desenvolvimento Web', description: 'Domine HTML, CSS, JavaScript e frameworks modernos.', category: 'Tecnologia', price: 'AOA 20.000', duration: 60, modality: 'Live Sessions', workload: 60, level: 'Intermediate', certificate: true, startDate: 'Next cohort: August 2026', featured: true },
-    { id: 3, title: 'Liderança e Gestão de Equipas', description: 'Desenvolva habilidades de liderança e gestão de equipas.', category: 'Liderança', price: 'AOA 18.000', duration: 30, modality: 'Hybrid', workload: 30, level: 'All Levels', certificate: true, startDate: 'Next cohort: September 2026', featured: false },
-    { id: 4, title: 'Marketing Digital', description: 'Aprenda estratégias de marketing digital para crescer a sua empresa.', category: 'Marketing', price: 'AOA 12.000', duration: 25, modality: 'Online', workload: 25, level: 'Beginner', certificate: true, startDate: 'Next cohort: October 2026', featured: false },
-    { id: 5, title: 'Análise de Dados', description: 'Domine Python, SQL e ferramentas de visualização de dados.', category: 'Tecnologia', price: 'AOA 25.000', duration: 50, modality: 'Live Sessions', workload: 50, level: 'Advanced', certificate: true, startDate: 'Next cohort: November 2026', featured: true },
-    { id: 6, title: 'Comunicação Empresarial', description: 'Melhore suas habilidades de comunicação no ambiente corporativo.', category: 'Soft Skills', price: 'AOA 10.000', duration: 20, modality: 'Online', workload: 20, level: 'All Levels', certificate: true, startDate: 'Next cohort: December 2026', featured: false }
+    { id: 1, title: 'Gestão de Projetos', description: 'Aprenda as melhores práticas de gestão de projetos do zero ao avançado.', category: 'Gestão', price: 15000, duration: 40, modality: 'Online', workload: 40, level: 'Beginner to Advanced', certificate: true, startDate: 'Next cohort: July 2026', featured: true, enrolled: false },
+    { id: 2, title: 'Desenvolvimento Web', description: 'Domine HTML, CSS, JavaScript e frameworks modernos.', category: 'Tecnologia', price: 20000, duration: 60, modality: 'Live Sessions', workload: 60, level: 'Intermediate', certificate: true, startDate: 'Next cohort: August 2026', featured: true, enrolled: false },
+    { id: 3, title: 'Liderança e Gestão de Equipas', description: 'Desenvolva habilidades de liderança e gestão de equipas.', category: 'Liderança', price: 18000, duration: 30, modality: 'Hybrid', workload: 30, level: 'All Levels', certificate: true, startDate: 'Next cohort: September 2026', featured: false, enrolled: false },
+    { id: 4, title: 'Marketing Digital', description: 'Aprenda estratégias de marketing digital para crescer a sua empresa.', category: 'Marketing', price: 12000, duration: 25, modality: 'Online', workload: 25, level: 'Beginner', certificate: true, startDate: 'Next cohort: October 2026', featured: false, enrolled: false },
+    { id: 5, title: 'Análise de Dados', description: 'Domine Python, SQL e ferramentas de visualização de dados.', category: 'Tecnologia', price: 25000, duration: 50, modality: 'Live Sessions', workload: 50, level: 'Advanced', certificate: true, startDate: 'Next cohort: November 2026', featured: true, enrolled: false },
+    { id: 6, title: 'Comunicação Empresarial', description: 'Melhore suas habilidades de comunicação no ambiente corporativo.', category: 'Soft Skills', price: 10000, duration: 20, modality: 'Online', workload: 20, level: 'All Levels', certificate: true, startDate: 'Next cohort: December 2026', featured: false, enrolled: false },
+    { id: 7, title: 'Gestão Financeira', description: 'Aprenda a gerir finanças empresariais de forma eficaz.', category: 'Gestão', price: 17000, duration: 35, modality: 'Online', workload: 35, level: 'Intermediate', certificate: true, startDate: 'Next cohort: July 2026', featured: false, enrolled: false },
+    { id: 8, title: 'SEO e Marketing de Conteúdo', description: 'Estratégias avançadas de SEO e marketing de conteúdo.', category: 'Marketing', price: 14000, duration: 28, modality: 'Online', workload: 28, level: 'Intermediate', certificate: true, startDate: 'Next cohort: August 2026', featured: true, enrolled: false },
+    { id: 9, title: 'Python para Iniciantes', description: 'Introdução à programação com Python.', category: 'Tecnologia', price: 13000, duration: 30, modality: 'Online', workload: 30, level: 'Beginner', certificate: true, startDate: 'Next cohort: September 2026', featured: false, enrolled: false }
   ];
 
   get filteredCourses() {
@@ -211,15 +279,120 @@ export class CoursesComponent {
     return this.courses.filter(c => c.category === this.activeCategory);
   }
 
+  get filteredAndSortedCourses() {
+    let result = this.filteredCourses;
+
+    if (this.searchQuery.trim()) {
+      const q = this.searchQuery.toLowerCase();
+      result = result.filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.description.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q)
+      );
+    }
+
+    if (this.selectedLevel) {
+      result = result.filter(c => {
+        if (this.selectedLevel === 'All Levels') return c.level === 'All Levels';
+        return c.level.includes(this.selectedLevel);
+      });
+    }
+
+    if (this.sortBy === 'price-asc') {
+      result = [...result].sort((a, b) => a.price - b.price);
+    } else if (this.sortBy === 'price-desc') {
+      result = [...result].sort((a, b) => b.price - a.price);
+    } else if (this.sortBy === 'duration') {
+      result = [...result].sort((a, b) => b.duration - a.duration);
+    } else if (this.sortBy === 'featured') {
+      result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    }
+
+    return result;
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredAndSortedCourses.length / this.pageSize));
+  }
+
+  get paginatedCourses() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredAndSortedCourses.slice(start, start + this.pageSize);
+  }
+
+  get pages(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
   setCategory(cat: string) {
     this.activeCategory = cat;
+    this.currentPage = 1;
+  }
+
+  onSearch() {
+    this.currentPage = 1;
+  }
+
+  onFilter() {
+    this.currentPage = 1;
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  formatPrice(price: number): string {
+    return 'AOA ' + price.toLocaleString('pt-AO');
   }
 
   openCourseModal(course: any) {
-    this.selectedCourse = course;
+    this.selectedCourse = { ...course, price: this.formatPrice(course.price) };
+    const userEnrollments = this.storage.getEnrollments();
+    this.selectedCourse.enrolled = userEnrollments.some((e: any) => e.course === course.title);
   }
 
   closeCourseModal() {
     this.selectedCourse = null;
   }
+
+  enroll(course: any) {
+    const currentUser = this.storage.getCurrentUser();
+    if (!currentUser) {
+      alert('Faça login para se inscrever.');
+      return;
+    }
+    const existing = this.storage.getEnrollments().find((e: any) => e.course === course.title);
+    if (existing) {
+      alert('Você já está inscrito neste curso.');
+      return;
+    }
+    this.storage.addEnrollment({
+      id: Date.now().toString(),
+      course: course.title,
+      progress: 0,
+      status: 'in_progress',
+      startDate: new Date().toISOString().split('T')[0],
+      nextLesson: 'Aula 1: Introdução'
+    });
+    alert('Inscrição realizada com sucesso!');
+    this.closeCourseModal();
+  }
+
+  constructor(private storage: StorageService) {}
 }

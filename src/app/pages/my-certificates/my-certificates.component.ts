@@ -8,7 +8,41 @@ import { StorageService } from '../../services/storage.service';
   imports: [CommonModule],
   template: `
     <div style="padding:2rem;">
+
       <h1 style="font-size:1.75rem;font-weight:700;color:var(--gray-900);margin-bottom:2.5rem;">Meus Certificados</h1>
+
+      @if (selectedCertificate) {
+        <div class="cert-overlay" (click)="closeCertificate()">
+          <div class="cert-modal" (click)="$event.stopPropagation()">
+            <div class="cert-modal-header">
+              <div>
+                <div style="font-size:0.75rem;font-weight:800;color:var(--gray-500);text-transform:uppercase;">Certificado</div>
+                <div style="font-size:1.2rem;font-weight:900;color:var(--gray-900);margin-top:0.25rem;">{{ selectedCertificate.name }}</div>
+              </div>
+              <button class="btn btn-ghost btn-sm" (click)="closeCertificate()">Fechar</button>
+            </div>
+
+            <div class="cert-modal-body">
+              <div class="cert-preview">
+                <div class="cert-badge">{{ selectedCertificate.code }}</div>
+                <div class="cert-title">Certificado de Conclusão</div>
+                <div class="cert-holder">{{ selectedCertificate.holder }}</div>
+                <div class="cert-subtitle">Curso: <strong>{{ selectedCertificate.course }}</strong></div>
+                <div class="cert-dates">
+                  <div>Emitido em: <strong>{{ selectedCertificate.issueDate }}</strong></div>
+                  <div>Válido até: <strong>{{ selectedCertificate.validUntil }}</strong></div>
+                </div>
+                <div class="cert-hint">(Use “Imprimir” para salvar em PDF no seu navegador)</div>
+              </div>
+            </div>
+
+            <div class="cert-modal-footer">
+              <button class="btn btn-ghost" style="flex:1;justify-content:center;" (click)="closeCertificate()">Cancelar</button>
+              <button class="btn btn-primary" style="flex:1;justify-content:center;" (click)="downloadPdf(selectedCertificate)">Download PDF</button>
+            </div>
+          </div>
+        </div>
+      }
 
       @if (certificates.length > 0) {
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.75rem;">
@@ -31,8 +65,13 @@ import { StorageService } from '../../services/storage.service';
                 </div>
               </div>
               <div style="display:flex;gap:0.75rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--gray-100);">
-                <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center;">Download PDF</button>
-                <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;">Compartilhar</button>
+                <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center;" (click)="viewCertificate(cert)">Ver</button>
+                <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;" (click)="downloadPdf(cert)">Download PDF</button>
+                <button class="btn btn-ghost btn-sm" (click)="shareCertificate(cert)" title="Partilhar">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.5 9 12c0-.5-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 111.024 5.196l-6.632 3.316m6.632-6l-6.632 3.316"/>
+                  </svg>
+                </button>
               </div>
             </div>
           }
@@ -51,6 +90,7 @@ import { StorageService } from '../../services/storage.service';
 })
 export class MyCertificatesComponent implements OnInit {
   certificates: any[] = [];
+  selectedCertificate: any | null = null;
 
   constructor(private storage: StorageService) {}
 
@@ -60,4 +100,42 @@ export class MyCertificatesComponent implements OnInit {
       this.certificates = this.storage.getCertificates();
     }
   }
+
+  viewCertificate(cert: any) {
+    this.selectedCertificate = cert;
+  }
+
+  closeCertificate() {
+    this.selectedCertificate = null;
+  }
+
+  downloadPdf(cert: any) {
+    this.viewCertificate(cert);
+    setTimeout(() => {
+      try {
+        window.print();
+      } catch {
+        // ignore
+      }
+    }, 50);
+  }
+
+  shareCertificate(cert: any) {
+    const shareData = {
+      title: cert.name,
+      text: `Confira o meu certificado: ${cert.course}`,
+      url: window.location.href
+    };
+
+    if (navigator.share) {
+      navigator.share(shareData).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(`${cert.name} - ${cert.course}`).then(() => {
+        alert('Link copiado para a área de transferência.');
+      }).catch(() => {
+        alert('Não foi possível partilhar.');
+      });
+    }
+  }
 }
+

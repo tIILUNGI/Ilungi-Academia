@@ -35,6 +35,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/my-courses/my-courses.component').then(m => m.MyCoursesComponent)
       },
       {
+        path: 'cursos-disponiveis',
+        loadComponent: () => import('./pages/courses/courses.component').then(m => m.CoursesComponent)
+      },
+      {
         path: 'certificados',
         loadComponent: () => import('./pages/my-certificates/my-certificates.component').then(m => m.MyCertificatesComponent)
       },
@@ -45,6 +49,14 @@ export const routes: Routes = [
       {
         path: 'comunidade',
         loadComponent: () => import('./pages/community/community.component').then(m => m.CommunityComponent)
+      },
+      {
+        path: 'comunidade/:forumId',
+        loadComponent: () => import('./pages/community/forum-details/forum-details.component').then(m => m.ForumDetailsComponent)
+      },
+      {
+        path: 'notificacoes',
+        loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent)
       }
     ]
   },

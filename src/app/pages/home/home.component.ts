@@ -109,7 +109,7 @@ import { CommonModule } from '@angular/common';
       </div>
     </section>
 
-    <!-- Course Details Modal -->
+<!-- Course Details Modal -->
     @if (selectedCourse) {
       <div class="modal-overlay" (click)="closeCourseModal()">
         <div class="modal-content" (click)="$event.stopPropagation()">
@@ -120,32 +120,32 @@ import { CommonModule } from '@angular/common';
           <div class="modal-body">
             <span class="badge badge-primary">{{ selectedCourse.category }}</span>
             <p style="margin:1rem 0 1.5rem;">{{ selectedCourse.description }}</p>
-<div class="course-details-grid">
-               <div class="detail-item">
-                 <span class="detail-label">Modalidade</span>
-                 <span class="detail-value">{{ selectedCourse.modality }}</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Duração</span>
-                 <span class="detail-value">{{ selectedCourse.duration }}h</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Carga Horária</span>
-                 <span class="detail-value">{{ selectedCourse.workload }}h</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Nível</span>
-                 <span class="detail-value">{{ selectedCourse.level }}</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Certificado</span>
-                 <span class="detail-value">{{ selectedCourse.certificate ? 'Incluído' : 'Não Incluído' }}</span>
-               </div>
-               <div class="detail-item">
-                 <span class="detail-label">Início</span>
-                 <span class="detail-value">{{ selectedCourse.startDate }}</span>
-               </div>
-             </div>
+            <div class="course-details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Modalidade</span>
+                <span class="detail-value">{{ selectedCourse.modality }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Duração</span>
+                <span class="detail-value">{{ selectedCourse.duration }}h</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Carga Horária</span>
+                <span class="detail-value">{{ selectedCourse.workload }}h</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Nível</span>
+                <span class="detail-value">{{ selectedCourse.level }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Certificado</span>
+                <span class="detail-value">{{ selectedCourse.certificate ? 'Incluído' : 'Não Incluído' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Início</span>
+                <span class="detail-value">{{ selectedCourse.startDate }}</span>
+              </div>
+            </div>
             <div class="modal-price">
               <span class="course-price">{{ selectedCourse.price }}</span>
             </div>
@@ -278,27 +278,27 @@ import { CommonModule } from '@angular/common';
       flex-direction: column;
       gap: 0.25rem;
     }
-    .detail-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--gray-500);
-      text-transform: uppercase;
-    }
-    .detail-value {
-      font-size: 0.875rem;
-      color: var(--gray-900);
-    }
-    .modal-price {
-      text-align: center;
-      padding-top: 1rem;
-      border-top: 1px solid var(--gray-200);
-    }
-    @media (max-width: 900px) {
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .features-grid { grid-template-columns: 1fr; }
-    }
+.detail-label {
+       font-size: 0.75rem;
+       font-weight: 600;
+       color: var(--gray-500);
+       text-transform: uppercase;
+     }
+     .detail-value {
+       font-size: 0.875rem;
+       color: var(--gray-900);
+     }
+     .modal-price {
+       text-align: center;
+       padding-top: 1rem;
+       border-top: 1px solid var(--gray-200);
+     }
+     @media (max-width: 900px) {
+       .features-grid { grid-template-columns: repeat(2, 1fr); }
+     }
+     @media (max-width: 600px) {
+       .features-grid { grid-template-columns: 1fr; }
+     }
   `]
 })
 export class HomeComponent {

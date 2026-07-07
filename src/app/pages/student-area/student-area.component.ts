@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../services/storage.service';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-student-area',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
   template: `
     @if (!isLoggedIn) {
       <div class="auth-wrapper" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe 40%,#e0e7ff);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
@@ -47,22 +46,37 @@ import { filter } from 'rxjs';
               </svg>
             </button>
           </div>
-          <nav style="flex:1;padding:1rem 0;">
-            <a routerLink="/area-do-aluno" routerLinkActive="active" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2 7-7 9 9-11 11-6-6z"/></svg>
+          <nav style="flex:1;padding:1rem 0;overflow-y:auto;">
+            <a routerLink="/area-do-aluno" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
               @if (!sidebarCollapsed) { <span>Painel Principal</span> }
             </a>
-            <a routerLink="/area-do-aluno/cursos" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
+            <a routerLink="/area-do-aluno/cursos" routerLinkActive="active" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253"/></svg>
               @if (!sidebarCollapsed) { <span>Meus Cursos</span> }
             </a>
-            <a routerLink="/area-do-aluno/certificados" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806"/></svg>
-              @if (!sidebarCollapsed) { <span>Certificados</span> }
+            <a routerLink="/area-do-aluno/cursos-disponiveis" routerLinkActive="active" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              @if (!sidebarCollapsed) { <span>Cursos Disponíveis</span> }
             </a>
-            <a routerLink="/area-do-aluno/comunidade" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
+            <a routerLink="/area-do-aluno/certificados" routerLinkActive="active" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+              @if (!sidebarCollapsed) { <span>Meus Certificados</span> }
+            </a>
+            <a routerLink="/area-do-aluno/comunidade" routerLinkActive="active" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-3-3h-4a3 3 0 00-3 3v2h5zM12 4a4 4 0 100 8 4 4 0 000-8zM5 20h5v-2a3 3 0 00-3-3H4a3 3 0 00-3 3v2h5z"/></svg>
               @if (!sidebarCollapsed) { <span>Comunidade</span> }
+            </a>
+            <a routerLink="/area-do-aluno/notificacoes" routerLinkActive="active" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;position:relative;">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-5 5v-5zM10.5 5.5C7.462 5.5 5 7.962 5 11v5l2.5 2.5V11c0-1.657 1.343-3 3-3s3 1.343 3 3v7c0 1.657-1.343 3-3 3h-2"/></svg>
+              @if (!sidebarCollapsed) { <span>Notificações</span> }
+              @if (unreadCount > 0 && !sidebarCollapsed) {
+                <span style="background:#ef4444;color:white;font-size:0.65rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:9999px;margin-left:auto;">{{ unreadCount }}</span>
+              }
+            </a>
+            <a routerLink="/area-do-aluno/perfil" routerLinkActive="active" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;color:var(--gray-600);text-decoration:none;font-size:0.9rem;border-left:3px solid transparent;margin:0.125rem 0;margin-top:0.5rem;padding-top:0.875rem;border-top:1px solid var(--gray-100);">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              @if (!sidebarCollapsed) { <span>Meu Perfil</span> }
             </a>
           </nav>
 
@@ -144,15 +158,12 @@ export class StudentAreaComponent implements OnInit {
   sidebarCollapsed = false;
   notifications = 2;
   currentLang = 'pt';
+  unreadCount = 0;
 
   constructor(
     private router: Router,
     private storage: StorageService
-  ) {
-    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
-      this.setActiveRoute();
-    });
-  }
+  ) {}
 
   ngOnInit() {
     const user = this.storage.getCurrentUser();
@@ -162,13 +173,7 @@ export class StudentAreaComponent implements OnInit {
       this.userEmail = user.email || '';
       this.userPicture = user.picture || '';
     }
-  }
-
-  setActiveRoute() {
-    const currentUrl = this.router.url;
-    document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active'));
-    const activeLink = document.querySelector(`[href="${currentUrl}"]`) as HTMLElement;
-    if (activeLink) activeLink.classList.add('active');
+    this.unreadCount = this.storage.getUnreadNotificationsCount();
   }
 
   toggleSidebar() {
@@ -180,7 +185,7 @@ export class StudentAreaComponent implements OnInit {
   }
 
   openNotifications() {
-    this.notifications = 0;
+    this.router.navigate(['/area-do-aluno/notificacoes']);
   }
 
   logout() {
