@@ -11,10 +11,15 @@ import { CommonModule } from '@angular/common';
       <div class="container">
         <div class="header-inner">
 
-          <!-- Logo -->
-          <a routerLink="/" class="header-logo">
+          <!-- Logo (sem navegação) -->
+          <div class="header-logo" aria-label="Academia Ilungi">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5"/>
+            </svg>
             <div class="logo-text">Academia<span>-Ilungi</span></div>
-          </a>
+          </div>
+
 
           <!-- Navigation Desktop -->
           <nav class="header-nav">
