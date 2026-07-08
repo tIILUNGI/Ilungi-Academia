@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -36,7 +38,7 @@ import { CommonModule } from '@angular/common';
           </div>
 
           <!-- Mobile Button -->
-          <button class="mobile-menu-btn" (click)="toggleMenu()" aria-label="Menu">
+          <button type="button" class="mobile-menu-btn" (click)="toggleMenu()" aria-label="Menu">
             <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               @if (isMenuOpen) {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -66,11 +68,23 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {
   isMenuOpen = false;
 
+  constructor(private router: Router) {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+      this.closeMenu();
+    });
+  }
+
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+    this.updateBodyOverflow();
   }
 
   closeMenu() {
     this.isMenuOpen = false;
+    this.updateBodyOverflow();
+  }
+
+  private updateBodyOverflow() {
+    document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
   }
 }
