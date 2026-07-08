@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StorageService } from '../../services/storage.service';
+import { COURSES } from '../../data/courses.data';
 
 @Component({
   selector: 'app-courses',
@@ -90,7 +91,7 @@ import { StorageService } from '../../services/storage.service';
                 <p class="card-course-desc">{{ course.description }}</p>
                 <div class="card-course-footer">
                   <div>
-                    <span class="course-price">{{ course.price }}</span>
+                    <span class="course-price">{{ formatPrice(course.price) }}</span>
                     <p style="font-size:0.75rem; color:var(--gray-400); margin-top:2px;">{{ course.duration }}h de conteúdo</p>
                   </div>
                   <button (click)="openCourseModal(course)" class="btn btn-ghost btn-sm">Ver Detalhes</button>
@@ -262,17 +263,7 @@ export class CoursesComponent {
 
   categories = ['Todos', 'Gestão', 'Tecnologia', 'Liderança', 'Marketing', 'Soft Skills'];
 
-  courses = [
-    { id: 1, title: 'Gestão de Projetos', description: 'Aprenda as melhores práticas de gestão de projetos do zero ao avançado.', category: 'Gestão', price: 15000, duration: 40, modality: 'Online', workload: 40, level: 'Beginner to Advanced', certificate: true, startDate: 'Next cohort: July 2026', featured: true, enrolled: false },
-    { id: 2, title: 'Desenvolvimento Web', description: 'Domine HTML, CSS, JavaScript e frameworks modernos.', category: 'Tecnologia', price: 20000, duration: 60, modality: 'Live Sessions', workload: 60, level: 'Intermediate', certificate: true, startDate: 'Next cohort: August 2026', featured: true, enrolled: false },
-    { id: 3, title: 'Liderança e Gestão de Equipas', description: 'Desenvolva habilidades de liderança e gestão de equipas.', category: 'Liderança', price: 18000, duration: 30, modality: 'Hybrid', workload: 30, level: 'All Levels', certificate: true, startDate: 'Next cohort: September 2026', featured: false, enrolled: false },
-    { id: 4, title: 'Marketing Digital', description: 'Aprenda estratégias de marketing digital para crescer a sua empresa.', category: 'Marketing', price: 12000, duration: 25, modality: 'Online', workload: 25, level: 'Beginner', certificate: true, startDate: 'Next cohort: October 2026', featured: false, enrolled: false },
-    { id: 5, title: 'Análise de Dados', description: 'Domine Python, SQL e ferramentas de visualização de dados.', category: 'Tecnologia', price: 25000, duration: 50, modality: 'Live Sessions', workload: 50, level: 'Advanced', certificate: true, startDate: 'Next cohort: November 2026', featured: true, enrolled: false },
-    { id: 6, title: 'Comunicação Empresarial', description: 'Melhore suas habilidades de comunicação no ambiente corporativo.', category: 'Soft Skills', price: 10000, duration: 20, modality: 'Online', workload: 20, level: 'All Levels', certificate: true, startDate: 'Next cohort: December 2026', featured: false, enrolled: false },
-    { id: 7, title: 'Gestão Financeira', description: 'Aprenda a gerir finanças empresariais de forma eficaz.', category: 'Gestão', price: 17000, duration: 35, modality: 'Online', workload: 35, level: 'Intermediate', certificate: true, startDate: 'Next cohort: July 2026', featured: false, enrolled: false },
-    { id: 8, title: 'SEO e Marketing de Conteúdo', description: 'Estratégias avançadas de SEO e marketing de conteúdo.', category: 'Marketing', price: 14000, duration: 28, modality: 'Online', workload: 28, level: 'Intermediate', certificate: true, startDate: 'Next cohort: August 2026', featured: true, enrolled: false },
-    { id: 9, title: 'Python para Iniciantes', description: 'Introdução à programação com Python.', category: 'Tecnologia', price: 13000, duration: 30, modality: 'Online', workload: 30, level: 'Beginner', certificate: true, startDate: 'Next cohort: September 2026', featured: false, enrolled: false }
-  ];
+  courses = COURSES;
 
   get filteredCourses() {
     if (this.activeCategory === 'Todos') return this.courses;

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { COURSES } from '../../data/courses.data';
 
 @Component({
   selector: 'app-certifications',
@@ -136,42 +137,14 @@ import { CommonModule } from '@angular/common';
   `]
 })
 export class CertificationsComponent {
-  certifications = [
-    {
-      id: 1,
-      name: 'Certificado Profissional em Gestão de Projetos',
-      description: 'Certificação que valida as suas competências em planeamento, execução e controlo de projectos.',
-      level: 'Avançado',
-      price: 'AOA 25.000',
-      bg: '#ede9fe', color: '#7c3aed',
-      features: ['Reconhecido no mercado nacional', 'Inclui exame final', 'Válido por 3 anos', 'Suporte pós-certificação']
-    },
-    {
-      id: 2,
-      name: 'Certificado em Desenvolvimento Web',
-      description: 'Certificação que atesta as suas habilidades em desenvolvimento web front-end e back-end.',
-      level: 'Intermédio',
-      price: 'AOA 30.000',
-      bg: '#dbeafe', color: '#2563eb',
-      features: ['Portfolio de projectos incluído', 'Avaliação prática', 'Acesso vitalício ao material', 'Mentoria individual']
-    },
-    {
-      id: 3,
-      name: 'Certificado de Liderança e Gestão',
-      description: 'Certificação para líderes que pretendem elevar as suas competências de gestão de equipas.',
-      level: 'Avançado',
-      price: 'AOA 22.000',
-      bg: '#d1fae5', color: '#059669',
-      features: ['Workshops presenciais', 'Casos de estudo reais', 'Acesso à comunidade leader', 'Coaching de carreira']
-    },
-    {
-      id: 4,
-      name: 'Certificado em Marketing Digital',
-      description: 'Certificação especializada em marketing digital, redes sociais e estratégias de crescimento.',
-      level: 'Básico–Intermédio',
-      price: 'AOA 20.000',
-      bg: '#fce7f3', color: '#db2777',
-      features: ['Ferramentas práticas incluídas', 'Projectos reais', 'Actualização contínua', 'Suporte por email']
-    }
-  ];
+  certifications = COURSES.map(c => ({
+    id: c.id,
+    name: c.certName,
+    description: c.description,
+    level: c.level,
+    price: 'AOA ' + c.price.toLocaleString('pt-AO'),
+    bg: c.certBg,
+    color: c.certColor,
+    features: c.certFeatures
+  }));
 }

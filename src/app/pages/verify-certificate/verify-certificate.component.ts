@@ -37,7 +37,7 @@ import { StorageService } from '../../services/storage.service';
                     name="code"
                     type="text"
                     required
-                    placeholder="Ilungi-2024-XXX-000000"
+                    placeholder="IL-ABC-1234-DEF ou Ilungi-2024-XXX-000000"
                     style="font-family:monospace; letter-spacing:0.05em;">
                   <span style="font-size:0.78rem;color:var(--gray-400);margin-top:0.375rem;display:block;">
                     Exemplo: Ilungi-2024-CI-000001
@@ -63,14 +63,17 @@ import { StorageService } from '../../services/storage.service';
                       </div>
                       <div>
                         <h3 style="font-weight:700;color:#065f46;margin-bottom:0.75rem;">Certificado Válido</h3>
-                        <div class="result-fields">
-                          <div class="result-field"><span class="result-label">Titular</span><span class="result-value">{{ result.holder }}</span></div>
-                          <div class="result-field"><span class="result-label">Curso</span><span class="result-value">{{ result.course }}</span></div>
-                          <div class="result-field"><span class="result-label">Data de Emissão</span><span class="result-value">{{ result.issueDate }}</span></div>
-                          <div class="result-field"><span class="result-label">Válido Até</span><span class="result-value">{{ result.validUntil }}</span></div>
-                          <div class="result-field"><span class="result-label">Código</span><span class="result-value" style="font-family:monospace;">{{ result.code }}</span></div>
-                          <div class="result-field"><span class="result-label">Estado</span><span class="result-value" style="color:#059669;font-weight:700;">{{ result.status }}</span></div>
-                        </div>
+                         <div class="result-fields">
+                           <div class="result-field"><span class="result-label">Titular</span><span class="result-value">{{ result.holder }}</span></div>
+                           <div class="result-field"><span class="result-label">Curso</span><span class="result-value">{{ result.course }}</span></div>
+                           @if (result.workloadHours != null) {
+                             <div class="result-field"><span class="result-label">Carga Horária</span><span class="result-value">{{ result.workloadHours }}h</span></div>
+                           }
+                           <div class="result-field"><span class="result-label">Data de Emissão</span><span class="result-value">{{ result.issueDate }}</span></div>
+                           <div class="result-field"><span class="result-label">Válido Até</span><span class="result-value">{{ result.validUntil }}</span></div>
+                           <div class="result-field"><span class="result-label">Código</span><span class="result-value" style="font-family:monospace;">{{ result.code }}</span></div>
+                           <div class="result-field"><span class="result-label">Estado</span><span class="result-value" style="color:#059669;font-weight:700;">{{ result.status === 'revoked' ? 'Revogado' : 'Válido' }}</span></div>
+                         </div>
                       </div>
                     </div>
                   } @else {
@@ -109,7 +112,7 @@ import { StorageService } from '../../services/storage.service';
               <ol class="how-to-list">
                 <li><span>1</span>Abra o seu certificado digital (PDF) ou físico</li>
                 <li><span>2</span>Procure o QR Code ou código alfanumérico no rodapé</li>
-                 <li><span>3</span>O código tem o formato <code>Ilungi-AAAA-XX-000000</code></li>
+                 <li><span>3</span>O código tem o formato <code>IL-AAA-0000-AAA</code> (AIA) ou <code>Ilungi-AAAA-XX-000000</code></li>
                 <li><span>4</span>Introduza o código acima e clique em verificar</li>
               </ol>
             </div>

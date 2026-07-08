@@ -19,7 +19,7 @@ import { filter } from 'rxjs/operators';
               <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
               <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5"/>
             </svg>
-            <div class="logo-text">Academia<span>-Ilungi</span></div>
+            <div class="logo-text">Academia <span>Ilungi</span></div>
           </div>
 
 

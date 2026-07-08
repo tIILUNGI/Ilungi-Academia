@@ -185,9 +185,32 @@ export class StorageService {
     return certs ? JSON.parse(certs) : [];
   }
 
+  // Normaliza certificados emitidos pelo painel AIA e pelo portal do aluno,
+  // garantindo um formato único e sincronizado para a verificação.
+  private normalizeCertificate(c: any): any {
+    const code = (c.code || c.verificationCode || '').toString().trim();
+    return {
+      code,
+      verificationCode: code,
+      name: c.name || (c.courseName ? `Certificado de Conclusão - ${c.courseName}` : ''),
+      holder: c.holder || c.recipientName || '',
+      recipientEmail: c.recipientEmail || '',
+      course: c.course || c.courseName || '',
+      courseId: c.courseId || '',
+      workloadHours: c.workloadHours != null ? c.workloadHours : null,
+      instructorName: c.instructorName || '',
+      issueDate: c.issueDate || '',
+      completionDate: c.completionDate || c.issueDate || '',
+      validUntil: c.validUntil || '',
+      status: c.status === 'revogado' || c.status === 'revoked' ? 'revoked' : (c.status || 'active')
+    };
+  }
+
   verifyCertificate(code: string): any | null {
-    const certificates = this.getCertificates();
-    return certificates.find(c => c.code === code) || null;
+    const normalized = this.getCertificates().map(c => this.normalizeCertificate(c));
+    const search = (code || '').toString().trim().toUpperCase();
+    if (!search) return null;
+    return normalized.find(c => c.code.toUpperCase() === search) || null;
   }
 
   // Enrollment methods (sistema interno por usuário)

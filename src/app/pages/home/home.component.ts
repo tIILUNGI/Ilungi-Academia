@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { COURSES } from '../../data/courses.data';
 
 @Component({
   selector: 'app-home',
@@ -324,11 +325,18 @@ statsBar = [
 
   selectedCourse: any = null;
 
-  featuredCourses = [
-    { id: 1, title: 'Gestão de Projetos', description: 'Aprenda as melhores práticas de gestão de projetos do zero ao avançado.', category: 'Gestão', price: 'AOA 15.000', duration: 40, modality: 'Online', workload: 40, level: 'Beginner to Advanced', certificate: true, startDate: 'Next cohort: July 2026', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60' },
-    { id: 2, title: 'Desenvolvimento Web', description: 'Domine HTML, CSS, JavaScript e frameworks modernos.', category: 'Tecnologia', price: 'AOA 20.000', duration: 60, modality: 'Live Sessions', workload: 60, level: 'Intermediate', certificate: true, startDate: 'Next cohort: August 2026', image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=60' },
-    { id: 3, title: 'Liderança e Gestão de Equipas', description: 'Desenvolva habilidades de liderança e gestão de equipas eficazes.', category: 'Liderança', price: 'AOA 18.000', duration: 30, modality: 'Hybrid', workload: 30, level: 'All Levels', certificate: true, startDate: 'Next cohort: September 2026', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&auto=format&fit=crop&q=60' },
-  ];
+  featuredCourses: any[] = [];
+
+  constructor() {
+    this.featuredCourses = COURSES
+      .filter(c => c.featured)
+      .slice(0, 3)
+      .map(c => ({ ...c, price: this.formatPrice(c.price) }));
+  }
+
+  formatPrice(price: number): string {
+    return 'AOA ' + price.toLocaleString('pt-AO');
+  }
 
   features = [
     { title: 'Aprendizagem Flexível', desc: 'Estude no seu ritmo, de qualquer lugar e a qualquer hora com acesso 24/7.' },
