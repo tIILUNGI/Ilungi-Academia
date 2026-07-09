@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-header',
@@ -22,7 +23,6 @@ import { filter } from 'rxjs/operators';
             <div class="logo-text">Academia <span>Ilungi</span></div>
           </div>
 
-
           <!-- Navigation Desktop -->
           <nav class="header-nav">
             <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Início</a>
@@ -33,8 +33,13 @@ import { filter } from 'rxjs/operators';
 
           <!-- Auth Buttons Desktop -->
           <div class="header-actions">
-            <a routerLink="/login" class="btn btn-ghost">Entrar</a>
-            <a routerLink="/registro" class="btn btn-primary">Criar Conta</a>
+            @if (currentUser) {
+              <a routerLink="/area-do-aluno" class="btn btn-ghost">Área do Aluno</a>
+              <button class="btn btn-primary" type="button" (click)="logout()">Sair</button>
+            } @else {
+              <a routerLink="/login" class="btn btn-ghost">Entrar</a>
+              <a routerLink="/registro" class="btn btn-primary">Criar Conta</a>
+            }
           </div>
 
           <!-- Mobile Button -->
@@ -57,18 +62,25 @@ import { filter } from 'rxjs/operators';
             <a routerLink="/certificacoes" (click)="closeMenu()">Certificações</a>
             <a routerLink="/certificados/verificar" (click)="closeMenu()">Verificar Certificados</a>
             <hr>
-            <a routerLink="/login" class="btn btn-ghost" (click)="closeMenu()">Entrar</a>
-            <a routerLink="/registro" class="btn btn-primary" (click)="closeMenu()">Criar Conta</a>
+            @if (currentUser) {
+              <a routerLink="/area-do-aluno" class="btn btn-ghost" (click)="closeMenu()">Área do Aluno</a>
+              <button class="btn btn-primary" type="button" (click)="logout(); closeMenu();">Sair</button>
+            } @else {
+              <a routerLink="/login" class="btn btn-ghost" (click)="closeMenu()">Entrar</a>
+              <a routerLink="/registro" class="btn btn-primary" (click)="closeMenu()">Criar Conta</a>
+            }
           </nav>
         }
       </div>
     </header>
-  `
+  `,
+  styles: [``]
 })
 export class HeaderComponent {
   isMenuOpen = false;
+  currentUser = this.storage.getCurrentUser();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private storage: StorageService) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       this.closeMenu();
     });
@@ -82,6 +94,11 @@ export class HeaderComponent {
   closeMenu() {
     this.isMenuOpen = false;
     this.updateBodyOverflow();
+  }
+
+  logout() {
+    this.storage.logout();
+    this.router.navigate(['/']);
   }
 
   private updateBodyOverflow() {

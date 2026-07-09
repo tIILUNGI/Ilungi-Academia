@@ -16,7 +16,6 @@ export class StorageService {
   private readonly COMMUNITY_POSTS_KEY = 'ailungi_community_posts';
 
   constructor() {
-    this.initializeDemoData();
   }
 
   private initializeDemoData() {
