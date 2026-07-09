@@ -33,11 +33,15 @@ export class CourseApiService {
     );
   }
 
-  getCourseById(id: string): Observable<CourseItem> {
+  getCourseById(id: string | number): Observable<CourseItem> {
     return this.http.get<CourseDTO>(`/api/courses/${id}`).pipe(
       map(dto => this.toCourseItem(dto)),
       catchError(() => throwError(() => new Error('Curso não encontrado')))
     );
+  }
+
+  enroll(cursoId: string | number): Observable<any> {
+    return this.http.post('/api/enrollments', { cursoId });
   }
 
   private toCourseItem(dto: CourseDTO): CourseItem {
@@ -46,16 +50,16 @@ export class CourseApiService {
       title: dto.titulo,
       description: dto.descricao,
       category: dto.categoria,
-      price: dto.preco,
-      duration: dto.duracaoEstimada,
-      workload: dto.cargaHoraria,
-      level: dto.nivel,
+      price: dto.preco != null ? dto.preco : 0,
+      duration: dto.duracaoEstimada != null ? dto.duracaoEstimada : 0,
+      workload: dto.cargaHoraria != null ? dto.cargaHoraria : 0,
+      level: dto.nivel || 'Todos',
       modality: 'Online',
       certificate: !dto.gratuito,
-      startDate: 'Next cohort',
+      startDate: 'Consulte o catálogo',
       featured: false,
       enrolled: false,
-      image: dto.imagemUrl,
+      image: dto.imagemUrl || '',
       certName: 'Certificado',
       certBg: '#f3f4f6',
       certColor: '#374151',

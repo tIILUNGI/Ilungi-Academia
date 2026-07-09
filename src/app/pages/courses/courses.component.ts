@@ -11,7 +11,6 @@ import { COURSES, CourseItem } from '../../data/courses.data';
   standalone: true,
   imports: [RouterLink, CommonModule, FormsModule],
   template: `
-    <!-- Page Hero -->
     <div class="page-hero">
       <div class="container">
         <span class="section-label">Aprendizagem</span>
@@ -20,10 +19,8 @@ import { COURSES, CourseItem } from '../../data/courses.data';
       </div>
     </div>
 
-    <!-- Courses Section -->
     <section class="section" style="padding-bottom: 4rem;">
       <div class="container">
-        <!-- Filter Bar -->
         <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;">
           <div class="filter-bar">
             <span style="font-size:0.85rem; font-weight:600; color:var(--gray-500);">Filtrar:</span>
@@ -120,7 +117,6 @@ import { COURSES, CourseItem } from '../../data/courses.data';
       </div>
     </section>
 
-    <!-- Course Details Modal -->
     @if (selectedCourse) {
       <div class="modal-overlay" (click)="closeCourseModal()">
         <div class="modal-content" (click)="$event.stopPropagation()">
@@ -162,7 +158,7 @@ import { COURSES, CourseItem } from '../../data/courses.data';
               </div>
             </div>
             <div class="modal-price">
-              <span class="course-price">{{ selectedCourse.price }}</span>
+              <span class="course-price">{{ formatPrice(selectedCourse.price) }}</span>
               @if (selectedCourse.enrolled) {
                 <p style="font-size:0.9rem;color:#059669;margin-top:0.5rem;">✓ Você já está inscrito neste curso</p>
               } @else {
@@ -175,87 +171,22 @@ import { COURSES, CourseItem } from '../../data/courses.data';
     }
   `,
   styles: [`
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
-    }
-    .modal-content {
-      background: white;
-      border-radius: 1rem;
-      max-width: 500px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--gray-200);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .modal-header h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--gray-900);
-      margin: 0;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--gray-500);
-      padding: 0;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-body {
-      padding: 1.5rem;
-    }
-    .course-details-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin: 1rem 0 1.5rem;
-    }
-    .detail-item {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    .detail-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--gray-500);
-      text-transform: uppercase;
-    }
-    .detail-value {
-      font-size: 0.875rem;
-      color: var(--gray-900);
-    }
-    .modal-price {
-      text-align: center;
-      padding-top: 1rem;
-      border-top: 1px solid var(--gray-200);
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+    .modal-content { background: white; border-radius: 1rem; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h2 { font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin: 0; }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500); padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+    .modal-body { padding: 1.5rem; }
+    .course-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
+    .detail-item { display: flex; flex-direction: column; gap: 0.25rem; }
+    .detail-label { font-size: 0.75rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; }
+    .detail-value { font-size: 0.875rem; color: var(--gray-900); }
+    .modal-price { text-align: center; padding-top: 1rem; border-top: 1px solid var(--gray-200); }
   `]
 })
 export class CoursesComponent implements OnInit {
   activeCategory = 'Todos';
-  selectedCourse: any = null;
+  selectedCourse: CourseItem | null = null;
   searchQuery = '';
   selectedLevel = '';
   sortBy = 'featured';
@@ -287,8 +218,10 @@ export class CoursesComponent implements OnInit {
 
     if (this.selectedLevel) {
       result = result.filter(c => {
-        if (this.selectedLevel === 'All Levels') return c.level === 'All Levels';
-        return c.level.includes(this.selectedLevel);
+        const lvl = (c.level || '').toLowerCase();
+        const sel = this.selectedLevel.toLowerCase();
+        if (sel === 'all levels') return lvl === 'all levels';
+        return lvl.includes(sel);
       });
     }
 
@@ -316,9 +249,7 @@ export class CoursesComponent implements OnInit {
 
   get pages(): number[] {
     const pages: number[] = [];
-    for (let i = 1; i <= this.totalPages; i++) {
-      pages.push(i);
-    }
+    for (let i = 1; i <= this.totalPages; i++) pages.push(i);
     return pages;
   }
 
@@ -327,65 +258,66 @@ export class CoursesComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  onSearch() {
-    this.currentPage = 1;
-  }
-
-  onFilter() {
-    this.currentPage = 1;
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
+  onSearch() { this.currentPage = 1; }
+  onFilter() { this.currentPage = 1; }
+  goToPage(page: number) { this.currentPage = page; }
+  prevPage() { if (this.currentPage > 1) this.currentPage--; }
+  nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; }
 
   formatPrice(price: number): string {
-    return 'AOA ' + price.toLocaleString('pt-AO');
+    return 'AOA ' + (price || 0).toLocaleString('pt-AO');
   }
 
-  openCourseModal(course: any) {
-    this.selectedCourse = { ...course, price: this.formatPrice(course.price) };
-    const userEnrollments = this.storage.getEnrollments();
-    this.selectedCourse.enrolled = userEnrollments.some((e: any) => e.course === course.title);
+  openCourseModal(course: CourseItem) {
+    this.selectedCourse = course;
+    this.selectedCourse.enrolled = this.storage.getEnrollments().some((e: any) => e.courseTitle === course.title || e.course === course.title);
   }
 
   closeCourseModal() {
     this.selectedCourse = null;
   }
 
-  enroll(course: any) {
+  enroll(course: CourseItem) {
     const currentUser = this.storage.getCurrentUser();
     if (!currentUser) {
       alert('Faça login para se inscrever.');
       return;
     }
-    const existing = this.storage.getEnrollments().find((e: any) => e.course === course.title);
-    if (existing) {
+
+    const already = this.storage.getEnrollments().find((e: any) => e.courseTitle === course.title || e.course === course.title);
+    if (already) {
       alert('Você já está inscrito neste curso.');
       return;
     }
-    this.storage.addEnrollment({
-      id: Date.now().toString(),
-      course: course.title,
-      progress: 0,
-      status: 'in_progress',
-      startDate: new Date().toISOString().split('T')[0],
-      nextLesson: 'Aula 1: Introdução'
+
+    this.courseApi.enroll(course.id).subscribe({
+      next: () => {
+        this.storage.addEnrollment({
+          id: Date.now().toString(),
+          courseTitle: course.title,
+          course: course.title,
+          progress: 0,
+          status: 'in_progress',
+          startDate: new Date().toISOString().split('T')[0],
+          nextLesson: 'Aula 1: Introdução'
+        });
+        alert('Inscrição realizada com sucesso!');
+        this.closeCourseModal();
+      },
+      error: () => {
+        this.storage.addEnrollment({
+          id: Date.now().toString(),
+          courseTitle: course.title,
+          course: course.title,
+          progress: 0,
+          status: 'in_progress',
+          startDate: new Date().toISOString().split('T')[0],
+          nextLesson: 'Aula 1: Introdução'
+        });
+        alert('Inscrição realizada localmente (API indisponível).');
+        this.closeCourseModal();
+      }
     });
-    alert('Inscrição realizada com sucesso!');
-    this.closeCourseModal();
   }
 
   constructor(private storage: StorageService, private courseApi: CourseApiService) {}
@@ -393,12 +325,8 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.courseApi.getCourses().subscribe({
-      next: data => {
-        if (data && data.length) {
-          this.courses = data;
-        } else {
-          this.courses = COURSES;
-        }
+      next: (data: CourseItem[]) => {
+        this.courses = data && data.length ? data : COURSES;
         this.loading = false;
       },
       error: () => {
