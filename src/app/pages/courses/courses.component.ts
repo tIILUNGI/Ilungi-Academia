@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StorageService } from '../../services/storage.service';
-import { COURSES } from '../../data/courses.data';
+import { CourseApiService } from '../../services/course-api.service';
+import { COURSES, CourseItem } from '../../data/courses.data';
 
 @Component({
   selector: 'app-courses',
@@ -252,7 +253,7 @@ import { COURSES } from '../../data/courses.data';
     }
   `]
 })
-export class CoursesComponent {
+export class CoursesComponent implements OnInit {
   activeCategory = 'Todos';
   selectedCourse: any = null;
   searchQuery = '';
@@ -260,10 +261,12 @@ export class CoursesComponent {
   sortBy = 'featured';
   currentPage = 1;
   pageSize = 6;
+  loading = false;
+  apiError = false;
 
   categories = ['Todos', 'Gestão', 'Tecnologia', 'Liderança', 'Marketing', 'Soft Skills'];
 
-  courses = COURSES;
+  courses: CourseItem[] = [];
 
   get filteredCourses() {
     if (this.activeCategory === 'Todos') return this.courses;
@@ -385,5 +388,23 @@ export class CoursesComponent {
     this.closeCourseModal();
   }
 
-  constructor(private storage: StorageService) {}
+  constructor(private storage: StorageService, private courseApi: CourseApiService) {}
+
+  ngOnInit(): void {
+    this.loading = true;
+    this.courseApi.getCourses().subscribe({
+      next: data => {
+        if (data && data.length) {
+          this.courses = data;
+        } else {
+          this.courses = COURSES;
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.courses = COURSES;
+        this.loading = false;
+      }
+    });
+  }
 }
