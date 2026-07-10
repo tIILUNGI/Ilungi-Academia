@@ -1,43 +1,144 @@
-# Landing Page — Academia Ilungi
+# Academia Ilungi — Landing Page
 
-Este repositório contém a página de apresentação pública, catálogo de cursos e portal institucional da **Academia Ilungi**.
+Landing page oficial da **Academia Ilungi**, desenvolvida com Angular. Responsável pela apresentação institucional, catálogo de cursos, certificações e páginas legais (termos, privacidade).
 
-## 🛠️ Tecnologias Utilizadas
+## Stack Tecnológico
 
-- **Core**: Angular 17.3.0 (Componentes Standalone)
-- **Roteamento**: Angular Router com mecanismos de redirecionamento para o ambiente interno do estudante (Vite/React).
-- **Estilização**: SCSS Modular baseado em design tokens unificados de marca.
+| Camada | Tecnologia |
+|--------|------------|
+| Framework | Angular 17+ |
+| Linguagem | TypeScript |
+| Estilização | Tailwind CSS v4 |
+| Roteamento | Angular Router |
+| Estado | Serviços RxJS/BehaviorSubject |
+| Build | Angular CLI |
 
-## 🚀 Como Iniciar Localmente
+## Estrutura do Projeto
 
-1. **Instalar Dependências**:
-   ```bash
-   npm install
-   ```
+```
+Ilungi-Academia/
+├── src/
+│   ├── app/
+│   │   ├── components/      # Componentes reutilizáveis (header, footer)
+│   │   ├── pages/           # Páginas da aplicação
+│   │   │   ├── home/        # Página inicial
+│   │   │   ├── courses/     # Listagem de cursos
+│   │   │   ├── certifications/ # Certificações
+│   │   │   ├── terms/       # Termos de serviço
+│   │   │   ├── privacy/     # Política de privacidade
+│   │   │   ├── verify-certificate/ # Verificação de certificado
+│   │   │   └── redirect/    # Redirecionamentos
+│   │   ├── services/        # Serviços (API)
+│   │   ├── data/            # Dados estáticos (fallback)
+│   │   └── app.routes.ts    # Rotas da aplicação
+│   └── styles.css           # Estilos globais
+├── angular.json
+├── package.json
+└── README.md
+```
 
-2. **Iniciar Servidor de Desenvolvimento**:
-   ```bash
-   npm run start
-   ```
-   *Nota: O servidor ficará disponível por padrão em `http://localhost:4200`.*
+## Como Executar
 
-3. **Compilar para Produção**:
-   ```bash
-   npm run build
-   ```
+### Pré-requisitos
 
-## 📂 Organização das Rotas e Páginas
+- Node.js 18+
+- Angular CLI 17+
 
-Toda a área restrita do aluno e o fluxo de autenticação foram migrados para o repositório **Ilungi-Academia-Apk** para simplificar e modularizar as aplicações.
+### Comandos
 
-As seguintes rotas públicas continuam ativas neste repositório:
-- `/` (Página Inicial/Landing)
-- `/cursos` (Catálogo Geral de Cursos)
-- `/certificacoes` (Informações sobre certificações corporativas)
-- `/certificados/verificar` (Validação de credenciais e certificados emitidos)
+```bash
+# Instalar dependências
+npm install
 
-As rotas a seguir efetuam o redirecionamento automático para o Portal do Aluno hospedado no repositório APK:
-- `/login` → Redireciona para o portal principal
-- `/registro` → Redireciona para o formulário de cadastro do portal
-- `/recuperar-senha` → Redireciona para o fluxo de redefinição do portal
-- `/area-do-aluno` → Redireciona para a início da área logada
+# Rodar em modo desenvolvimento
+npm start
+# ou
+ng serve
+
+# A aplicação abre em http://localhost:4200
+```
+
+### Build de Produção
+
+```bash
+ng build --configuration production
+```
+
+Os arquivos são gerados em `dist/ailungi-frontend/browser/`.
+
+## Configuração
+
+### Variáveis de Ambiente
+
+Configure a URL da API em `src/environments/environment.ts` ou no serviço de cursos:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:4001/api'
+};
+```
+
+### CORS
+
+O backend está configurado para aceitar requisições de `http://localhost:4200`.
+
+## Integração com Backend
+
+### Serviço de Cursos
+
+O serviço `CourseApiService` faz requisições para o backend:
+
+```typescript
+getCourses(): Observable<CourseItem[]> {
+  return this.http.get<CourseItem[]>(`${environment.apiUrl}/courses`);
+}
+
+getCourseById(id: string): Observable<CourseItem> {
+  return this.http.get<CourseItem>(`${environment.apiUrl}/courses/${id}`);
+}
+```
+
+### Fallback para Dados Estáticos
+
+Se a API estiver indisponível, as páginas usam dados estáticos definidos em `src/app/data/courses.data.ts`.
+
+## Rotas
+
+| Rota | Componente | Descrição |
+|------|------------|-----------|
+| `/` | `HomeComponent` | Página inicial |
+| `/cursos` | `CoursesComponent` | Catálogo de cursos |
+| `/certificacoes` | `CertificationsComponent` | Certificações disponíveis |
+| `/termos` | `TermsComponent` | Termos de serviço |
+| `/privacidade` | `PrivacyComponent` | Política de privacidade |
+| `/verificar-certificado` | `VerifyCertificateComponent` | Verificação pública de certificado |
+| `/certificado/:id` | `VerifyCertificateComponent` | Visualização pública de certificado |
+
+## Deploy
+
+### Netlify / Vercel
+
+Configure o rewrite para `index.html` em todas as rotas (SPA):
+
+```
+/*    /index.html   200
+```
+
+### Apache / Nginx
+
+```nginx
+location / {
+  try_files $uri $uri/ /index.html;
+}
+```
+
+## Troubleshooting
+
+### Erro CORS
+
+Verifique se o backend está rodando e se a origem `http://localhost:4200` está permitida.
+
+### Dados não carregam
+
+Verifique se o backend está acessível em `http://localhost:4001/api/courses`.
