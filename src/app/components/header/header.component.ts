@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { StorageService } from '../../services/storage.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -80,7 +81,7 @@ export class HeaderComponent {
   isMenuOpen = false;
   currentUser = this.storage.getCurrentUser();
 
-  constructor(private router: Router, private storage: StorageService) {
+  constructor(private router: Router, private storage: StorageService, private auth: AuthService) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       this.closeMenu();
     });
@@ -97,7 +98,7 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.storage.logout();
+    this.auth.logout();
     this.router.navigate(['/']);
   }
 

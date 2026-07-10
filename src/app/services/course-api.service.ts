@@ -18,6 +18,32 @@ export interface CourseDTO {
   instrutor: string;
 }
 
+export interface CertificateDTO {
+  id: string;
+  recipientName: string;
+  recipientEmail: string;
+  courseName: string;
+  courseId: string;
+  instructorName: string;
+  workloadHours: number;
+  verificationCode: string;
+  issueDate: string;
+  validUntil: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface CertificationItem {
+  id: string;
+  name: string;
+  description: string;
+  level: string;
+  price: string;
+  bg: string;
+  color: string;
+  features: string[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -44,13 +70,26 @@ export class CourseApiService {
     return this.http.post('/api/enrollments', { cursoId });
   }
 
+  getCertifications(): Observable<CertificationItem[]> {
+    return this.http.get<CourseDTO[]>('/api/courses').pipe(
+      map(dtos => dtos.map(dto => this.toCertificationItem(dto))),
+      catchError(() => of([]))
+    );
+  }
+
+  verifyCertificate(code: string): Observable<CertificateDTO | null> {
+    return this.http.get<CertificateDTO>(`/api/certificates/verify/${encodeURIComponent(code.toUpperCase())}`).pipe(
+      catchError(() => of(null))
+    );
+  }
+
   private toCourseItem(dto: CourseDTO): CourseItem {
     return {
       id: typeof dto.id === 'string' ? Number(dto.id) : dto.id,
       title: dto.titulo,
       description: dto.descricao,
       category: dto.categoria,
-      price: dto.preco != null ? dto.preco : 0,
+      price: dto.preco != null ? Number(dto.preco) : 0,
       duration: dto.duracaoEstimada != null ? dto.duracaoEstimada : 0,
       workload: dto.cargaHoraria != null ? dto.cargaHoraria : 0,
       level: dto.nivel || 'Todos',
@@ -64,6 +103,25 @@ export class CourseApiService {
       certBg: '#f3f4f6',
       certColor: '#374151',
       certFeatures: []
+    };
+  }
+
+  private toCertificationItem(dto: CourseDTO): CertificationItem {
+    const price = dto.preco != null ? 'AOA ' + Number(dto.preco).toLocaleString('pt-AO') : 'Consulte';
+    return {
+      id: typeof dto.id === 'string' ? dto.id : String(dto.id),
+      name: dto.titulo,
+      description: dto.descricao,
+      level: dto.nivel || 'Todos',
+      price,
+      bg: '#f3f4f6',
+      color: '#374151',
+      features: [
+        'Curso certificado',
+        'Material incluso',
+        'Suporte pedagógico',
+        'Avaliação final'
+      ]
     };
   }
 }

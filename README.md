@@ -1,17 +1,18 @@
 # Academia Ilungi — Landing Page
 
-Landing page oficial da **Academia Ilungi**, desenvolvida com Angular. Responsável pela apresentação institucional, catálogo de cursos, certificações e páginas legais (termos, privacidade).
+A Landing Page oficial da **Academia Ilungi**, desenvolvida em Angular. Apresenta o portal institucional, catálogo de cursos, informações de certificação, verificação de certificados e fornece redirecionamento para o Portal do Aluno e do Admin.
 
 ## Stack Tecnológico
 
 | Camada | Tecnologia |
 |--------|------------|
-| Framework | Angular 17+ |
+| Framework | Angular 17.x (Standalone Components) |
 | Linguagem | TypeScript |
 | Estilização | Tailwind CSS v4 |
 | Roteamento | Angular Router |
-| Estado | Serviços RxJS/BehaviorSubject |
-| Build | Angular CLI |
+| Ícones | Custom SVG |
+| Client HTTP | Angular HttpClient |
+| Porta Local | 4200 |
 
 ## Estrutura do Projeto
 
@@ -19,126 +20,67 @@ Landing page oficial da **Academia Ilungi**, desenvolvida com Angular. Responsá
 Ilungi-Academia/
 ├── src/
 │   ├── app/
-│   │   ├── components/      # Componentes reutilizáveis (header, footer)
-│   │   ├── pages/           # Páginas da aplicação
-│   │   │   ├── home/        # Página inicial
-│   │   │   ├── courses/     # Listagem de cursos
-│   │   │   ├── certifications/ # Certificações
-│   │   │   ├── terms/       # Termos de serviço
-│   │   │   ├── privacy/     # Política de privacidade
-│   │   │   ├── verify-certificate/ # Verificação de certificado
-│   │   │   └── redirect/    # Redirecionamentos
-│   │   ├── services/        # Serviços (API)
-│   │   ├── data/            # Dados estáticos (fallback)
-│   │   └── app.routes.ts    # Rotas da aplicação
-│   └── styles.css           # Estilos globais
-├── angular.json
-├── package.json
-└── README.md
+│   │   ├── components/      # Componentes compartilhados (header, footer, orbit anims)
+│   │   ├── pages/           # Páginas estruturadas (home, cursos, certificações, legal)
+│   │   │   ├── home/        # Landing page animada
+│   │   │   ├── courses/     # Grid dinâmico de cursos
+│   │   │   ├── verify-certificate/ # Verificação de certificados por código único
+│   │   │   └── redirect/    # Redirecionadores para portas de portais externos
+│   │   ├── services/        # Serviços baseados em RxJS (HttpClient, etc)
+│   │   │   ├── course-api.service.ts # Consumo da API de cursos e verificação
+│   │   │   └── storage.service.ts    # Armazenamento de cache / dados estáticos
+│   │   └── app.routes.ts    # Rotas de navegação da Landing Page
+│   └── styles.css           # Folha de estilo TailWind centralizada
 ```
 
-## Como Executar
+---
+
+## Como Executar Localmente
 
 ### Pré-requisitos
+- Node.js (v18+)
+- Angular CLI compilando localmente.
 
-- Node.js 18+
-- Angular CLI 17+
+### Passos
 
-### Comandos
+1. Acesse a pasta do projeto:
+   ```bash
+   cd .\Ilungi-Academia\
+   ```
 
-```bash
-# Instalar dependências
-npm install
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-# Rodar em modo desenvolvimento
-npm start
-# ou
-ng serve
+3. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm start
+   # ou ng serve
+   ```
 
-# A aplicação abre em http://localhost:4200
-```
+O site estará acessível em **http://localhost:4200**.
 
-### Build de Produção
+---
 
-```bash
-ng build --configuration production
-```
+## Integração com a API Backend
 
-Os arquivos são gerados em `dist/ailungi-frontend/browser/`.
+### 1. Comunicação Direta com o Backend (Porta `4001`)
+O serviço `course-api.service.ts` faz requisições Http dirigidas a endpoints específicos da API. Se a API estiver offline, a aplicação recupera e exibe dados locais mockados (`src/app/data/courses.data.ts`) para evitar quebras visuais e garantir resiliência operacional.
 
-## Configuração
+### 2. Configuração de Proxy (Para desenvolvimento)
+As requisições iniciadas com o prefixo `/api` são mapeadas via proxy local do Angular configurado em `proxy.conf.json` para encaminhar diretamente para o servidor Spring Boot na porta `4001`.
 
-### Variáveis de Ambiente
+### 3. Rotas de Redirecionamento de Portais
+As rotas de acesso ao ecossistema estão configuradas na Landing Page para redirecionamento automático para os respectivos portais que correm nas portas locais:
+* **Área do Aluno**: Redireciona para o portal do aluno rodando em `http://localhost:3000`.
+* **Registro de Novo Aluno**: Redireciona para `http://localhost:3000?view=register`.
+* **Portal de Administração**: Redireciona para a central de gestão em `http://localhost:3001`.
 
-Configure a URL da API em `src/environments/environment.ts` ou no serviço de cursos:
+---
 
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:4001/api'
-};
-```
-
-### CORS
-
-O backend está configurado para aceitar requisições de `http://localhost:4200`.
-
-## Integração com Backend
-
-### Serviço de Cursos
-
-O serviço `CourseApiService` faz requisições para o backend:
-
-```typescript
-getCourses(): Observable<CourseItem[]> {
-  return this.http.get<CourseItem[]>(`${environment.apiUrl}/courses`);
-}
-
-getCourseById(id: string): Observable<CourseItem> {
-  return this.http.get<CourseItem>(`${environment.apiUrl}/courses/${id}`);
-}
-```
-
-### Fallback para Dados Estáticos
-
-Se a API estiver indisponível, as páginas usam dados estáticos definidos em `src/app/data/courses.data.ts`.
-
-## Rotas
-
-| Rota | Componente | Descrição |
-|------|------------|-----------|
-| `/` | `HomeComponent` | Página inicial |
-| `/cursos` | `CoursesComponent` | Catálogo de cursos |
-| `/certificacoes` | `CertificationsComponent` | Certificações disponíveis |
-| `/termos` | `TermsComponent` | Termos de serviço |
-| `/privacidade` | `PrivacyComponent` | Política de privacidade |
-| `/verificar-certificado` | `VerifyCertificateComponent` | Verificação pública de certificado |
-| `/certificado/:id` | `VerifyCertificateComponent` | Visualização pública de certificado |
-
-## Deploy
-
-### Netlify / Vercel
-
-Configure o rewrite para `index.html` em todas as rotas (SPA):
-
-```
-/*    /index.html   200
-```
-
-### Apache / Nginx
-
-```nginx
-location / {
-  try_files $uri $uri/ /index.html;
-}
-```
-
-## Troubleshooting
-
-### Erro CORS
-
-Verifique se o backend está rodando e se a origem `http://localhost:4200` está permitida.
-
-### Dados não carregam
-
-Verifique se o backend está acessível em `http://localhost:4001/api/courses`.
+## Módulo de Verificação de Certificados
+A Landing Page contém uma área pública de validação de certificados na rota `/certificados/verificar`. 
+- O utilizador introduz o código identificador único (ex: `ILUNGI-XXXXXXXXXXXX`).
+- O sistema faz uma requisição HTTP GET para `/api/certificates/verify/{code}`.
+- Conforme as regras de negócio, dados cruciais como o nome do aluno, instrutor, curso, carga horária e validade são respondidos pela API e renderizados no ecrã.

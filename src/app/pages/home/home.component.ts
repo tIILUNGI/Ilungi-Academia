@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { CourseApiService } from '../../services/course-api.service';
+import { CourseApiService, CertificationItem } from '../../services/course-api.service';
 import { COURSES, CourseItem } from '../../data/courses.data';
 
 @Component({
@@ -113,7 +113,54 @@ import { COURSES, CourseItem } from '../../data/courses.data';
       </div>
     </section>
 
-<!-- Course Details Modal -->
+    <!-- Featured Certifications -->
+    <section class="section" style="padding-bottom: 5rem; margin-bottom: 3rem;">
+      <div class="container">
+        <div class="section-header animate-on-load">
+          <span class="section-label">Certificações</span>
+          <h2 class="section-title">Certificações Profissionais</h2>
+          <p class="section-subtitle">Obtenha certificações que impulsionam a sua carreira no mercado angolano e internacional.</p>
+        </div>
+
+        <div class="cert-grid animate-on-load delay-2" style="gap: 2rem;">
+          @for (cert of certifications; track cert.id) {
+            <div class="card cert-card">
+              <div class="cert-icon" [style.background]="cert.bg">
+                <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" [style.color]="cert.color">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                </svg>
+              </div>
+              <div class="cert-body">
+                <span class="badge badge-primary" style="margin-bottom:0.5rem;">{{ cert.level }}</span>
+                <h3 class="cert-title">{{ cert.name }}</h3>
+                <p class="cert-desc">{{ cert.description }}</p>
+                <ul class="cert-features">
+                  @for (f of cert.features; track f) {
+                    <li>
+                      <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="color:var(--primary); flex-shrink:0;">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ f }}
+                    </li>
+                  }
+                </ul>
+                <div class="cert-footer">
+                  <span class="cert-price">{{ cert.price }}</span>
+                  <a routerLink="/certificacoes" class="btn btn-primary btn-sm">Ver Certificações</a>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div style="text-align:center; margin-top:3rem;">
+          <a routerLink="/certificacoes" class="btn btn-ghost animate-on-load delay-3">Ver Todas as Certificações &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+ <!-- Course Details Modal -->
     @if (selectedCourse) {
       <div class="modal-overlay" (click)="closeCourseModal()">
         <div class="modal-content" (click)="$event.stopPropagation()">
@@ -297,13 +344,76 @@ import { COURSES, CourseItem } from '../../data/courses.data';
        padding-top: 1rem;
        border-top: 1px solid var(--gray-200);
      }
+     .cert-grid {
+       display: grid;
+       grid-template-columns: repeat(2, 1fr);
+       gap: 2.25rem;
+     }
+     .cert-card {
+       display: flex;
+       gap: 1.25rem;
+       align-items: flex-start;
+       padding: 2rem;
+     }
+     .cert-icon {
+       width: 56px;
+       height: 56px;
+       border-radius: 0.875rem;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       flex-shrink: 0;
+     }
+     .cert-body { flex: 1; }
+     .cert-title {
+       font-size: 1.05rem;
+       font-weight: 700;
+       color: var(--gray-900);
+       margin: 0.375rem 0 0.5rem;
+       transition: color 0.2s;
+     }
+     .cert-card:hover .cert-title { color: var(--primary); }
+     .cert-desc {
+       font-size: 0.875rem;
+       color: var(--gray-500);
+       line-height: 1.65;
+       margin-bottom: 1rem;
+     }
+     .cert-features {
+       list-style: none;
+       display: flex;
+       flex-direction: column;
+       gap: 0.375rem;
+       margin-bottom: 1.25rem;
+     }
+     .cert-features li {
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+       font-size: 0.8rem;
+       color: var(--gray-600);
+     }
+     .cert-footer {
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       padding-top: 1rem;
+       border-top: 1px solid var(--gray-100);
+     }
+     .cert-price {
+       font-size: 1.1rem;
+       font-weight: 800;
+       color: var(--primary);
+     }
      @media (max-width: 900px) {
        .features-grid { grid-template-columns: repeat(2, 1fr); }
+       .cert-grid { grid-template-columns: 1fr; }
+       .cert-card { flex-direction: column; }
      }
      @media (max-width: 600px) {
        .features-grid { grid-template-columns: 1fr; }
      }
-  `]
+   `]
 })
 export class HomeComponent implements OnInit {
   heroBadges = [
@@ -327,6 +437,7 @@ export class HomeComponent implements OnInit {
   selectedCourse: any = null;
 
   featuredCourses: any[] = [];
+  certifications: CertificationItem[] = [];
 
   constructor(private courseApi: CourseApiService) {}
 
@@ -344,6 +455,15 @@ export class HomeComponent implements OnInit {
           .filter(c => c.featured)
           .slice(0, 3)
           .map(c => ({ ...c, price: this.formatPrice(c.price) }));
+      }
+    });
+
+    this.courseApi.getCertifications().subscribe({
+      next: (data: CertificationItem[]) => {
+        this.certifications = data && data.length ? data.slice(0, 3) : [];
+      },
+      error: () => {
+        this.certifications = [];
       }
     });
   }

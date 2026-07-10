@@ -14,6 +14,7 @@ export class StorageService {
 
   private readonly NOTIFICATIONS_KEY = 'ailungi_notifications';
   private readonly COMMUNITY_POSTS_KEY = 'ailungi_community_posts';
+  private readonly TOKEN_KEY = 'ailungi_token';
 
   constructor() {
   }
@@ -172,10 +173,23 @@ export class StorageService {
 
   logout(): void {
     localStorage.removeItem(this.CURRENT_USER_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
   }
 
   setCurrentUser(user: any): void {
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  clearToken(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
   }
 
   // Certificate methods

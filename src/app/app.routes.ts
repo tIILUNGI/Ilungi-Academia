@@ -33,11 +33,9 @@ export const routes: Routes = [
     path: 'privacidade',
     loadComponent: () => import('./pages/privacy/privacy.component').then(m => m.PrivacyComponent)
   },
-  // Redirect internal system paths to the Apk app
   {
     path: 'login',
-    loadComponent: () => import('./pages/redirect/redirect.component').then(m => m.RedirectComponent),
-    canActivate: [redirectExternal('http://localhost:3000')]
+    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'registro',
@@ -53,6 +51,11 @@ export const routes: Routes = [
     path: 'area-do-aluno',
     loadComponent: () => import('./pages/redirect/redirect.component').then(m => m.RedirectComponent),
     canActivate: [redirectExternal('http://localhost:3000')]
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./pages/redirect/redirect.component').then(m => m.RedirectComponent),
+    canActivate: [redirectExternal('http://localhost:3001')]
   },
   {
     path: '**',

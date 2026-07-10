@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { StorageService } from '../../services/storage.service';
+import { CommonModule } from '@angular/common';
+import { CourseApiService } from '../../services/course-api.service';
 
 @Component({
   selector: 'app-verify-certificate',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   template: `
     <!-- Page Hero -->
     <div class="page-hero">
@@ -64,14 +65,14 @@ import { StorageService } from '../../services/storage.service';
                       <div>
                         <h3 style="font-weight:700;color:#065f46;margin-bottom:0.75rem;">Certificado Válido</h3>
                          <div class="result-fields">
-                           <div class="result-field"><span class="result-label">Titular</span><span class="result-value">{{ result.holder }}</span></div>
-                           <div class="result-field"><span class="result-label">Curso</span><span class="result-value">{{ result.course }}</span></div>
+                           <div class="result-field"><span class="result-label">Titular</span><span class="result-value">{{ result.recipientName }}</span></div>
+                           <div class="result-field"><span class="result-label">Curso</span><span class="result-value">{{ result.courseName }}</span></div>
                            @if (result.workloadHours != null) {
                              <div class="result-field"><span class="result-label">Carga Horária</span><span class="result-value">{{ result.workloadHours }}h</span></div>
                            }
-                           <div class="result-field"><span class="result-label">Data de Emissão</span><span class="result-value">{{ result.issueDate }}</span></div>
-                           <div class="result-field"><span class="result-label">Válido Até</span><span class="result-value">{{ result.validUntil }}</span></div>
-                           <div class="result-field"><span class="result-label">Código</span><span class="result-value" style="font-family:monospace;">{{ result.code }}</span></div>
+                           <div class="result-field"><span class="result-label">Data de Emissão</span><span class="result-value">{{ result.issueDate | date:'dd/MM/yyyy' }}</span></div>
+                           <div class="result-field"><span class="result-label">Válido Até</span><span class="result-value">{{ result.validUntil | date:'dd/MM/yyyy' }}</span></div>
+                           <div class="result-field"><span class="result-label">Código</span><span class="result-value" style="font-family:monospace;">{{ result.verificationCode }}</span></div>
                            <div class="result-field"><span class="result-label">Estado</span><span class="result-value" style="color:#059669;font-weight:700;">{{ result.status === 'revoked' ? 'Revogado' : 'Válido' }}</span></div>
                          </div>
                       </div>
@@ -177,18 +178,36 @@ export class VerifyCertificateComponent {
   hasResult = false;
   isValid = false;
   result: any = null;
+  loading = false;
 
-  constructor(private storage: StorageService) {}
+  constructor(private courseApi: CourseApiService) {}
 
   onSubmit() {
     this.hasResult = true;
-    const certificate = this.storage.verifyCertificate(this.code.toUpperCase());
-    if (certificate) {
-      this.isValid = true;
-      this.result = certificate;
-    } else {
-      this.isValid = false;
-      this.result = null;
+    this.isValid = false;
+    this.result = null;
+    this.loading = true;
+    const code = (this.code || '').trim();
+    if (!code) {
+      this.loading = false;
+      return;
     }
+    this.courseApi.verifyCertificate(code).subscribe({
+      next: (data) => {
+        this.loading = false;
+        if (data) {
+          this.isValid = true;
+          this.result = data;
+        } else {
+          this.isValid = false;
+          this.result = null;
+        }
+      },
+      error: () => {
+        this.loading = false;
+        this.isValid = false;
+        this.result = null;
+      }
+    });
   }
 }
