@@ -16,11 +16,8 @@ import { AuthService } from '../../services/auth.service';
         <div class="header-inner">
 
           <!-- Logo (sem navegação) -->
-          <div class="header-logo" aria-label="Academia Ilungi">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5"/>
-            </svg>
+          <div class="header-logo" aria-label="Academia Ilungi" style="display: flex; align-items: center; gap: 10px;">
+            <img src="assets/AI.png" alt="Academia Ilungi" style="width: 32px; height: 32px; object-fit: contain;" />
             <div class="logo-text">Academia <span>Ilungi</span></div>
           </div>
 
