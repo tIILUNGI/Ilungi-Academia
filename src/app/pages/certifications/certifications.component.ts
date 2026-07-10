@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { COURSES } from '../../data/courses.data';
+import { CourseApiService } from '../../services/course-api.service';
+import { COURSES, CourseItem } from '../../data/courses.data';
 
 @Component({
   selector: 'app-certifications',
@@ -136,15 +137,38 @@ import { COURSES } from '../../data/courses.data';
     }
   `]
 })
-export class CertificationsComponent {
-  certifications = COURSES.map(c => ({
-    id: c.id,
-    name: c.certName,
-    description: c.description,
-    level: c.level,
-    price: 'AOA ' + c.price.toLocaleString('pt-AO'),
-    bg: c.certBg,
-    color: c.certColor,
-    features: c.certFeatures
-  }));
+export class CertificationsComponent implements OnInit {
+  certifications: any[] = [];
+
+  constructor(private courseApi: CourseApiService) {}
+
+  ngOnInit(): void {
+    this.courseApi.getCourses().subscribe({
+      next: (data: CourseItem[]) => {
+        const courses = data && data.length ? data : COURSES;
+        this.certifications = courses.map(c => ({
+          id: c.id,
+          name: c.certName,
+          description: c.description,
+          level: c.level,
+          price: 'AOA ' + c.price.toLocaleString('pt-AO'),
+          bg: c.certBg,
+          color: c.certColor,
+          features: c.certFeatures
+        }));
+      },
+      error: () => {
+        this.certifications = COURSES.map(c => ({
+          id: c.id,
+          name: c.certName,
+          description: c.description,
+          level: c.level,
+          price: 'AOA ' + c.price.toLocaleString('pt-AO'),
+          bg: c.certBg,
+          color: c.certColor,
+          features: c.certFeatures
+        }));
+      }
+    });
+  }
 }

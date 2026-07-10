@@ -42,7 +42,7 @@ import { RouterLink } from '@angular/router';
 
         <div class="footer-bottom">
           <p>© {{ currentYear }} Academia Ilungi. Todos os direitos reservados.</p>
-          <a routerLink="/sitemap">Mapa do Site</a>
+          <a routerLink="/privacidade">Política de Privacidade</a>
         </div>
       </div>
     </footer>

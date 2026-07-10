@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { COURSES } from '../../data/courses.data';
+import { CourseApiService } from '../../services/course-api.service';
+import { COURSES, CourseItem } from '../../data/courses.data';
 
 @Component({
   selector: 'app-home',
@@ -304,7 +305,7 @@ import { COURSES } from '../../data/courses.data';
      }
   `]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   heroBadges = [
     { label: 'Cursos Certificados' },
     { label: 'Professores Especialistas' },
@@ -316,7 +317,7 @@ export class HomeComponent {
     { label: 'Conclusão', pct: '85%' },
   ];
 
-statsBar = [
+  statsBar = [
     { value: '500+', label: 'Alumni' },
     { value: '30+', label: 'Cursos Disponíveis' },
     { value: '15+', label: 'Instrutores Especializados' },
@@ -327,11 +328,24 @@ statsBar = [
 
   featuredCourses: any[] = [];
 
-  constructor() {
-    this.featuredCourses = COURSES
-      .filter(c => c.featured)
-      .slice(0, 3)
-      .map(c => ({ ...c, price: this.formatPrice(c.price) }));
+  constructor(private courseApi: CourseApiService) {}
+
+  ngOnInit(): void {
+    this.courseApi.getCourses().subscribe({
+      next: (data: CourseItem[]) => {
+        const courses = data && data.length ? data : COURSES;
+        this.featuredCourses = courses
+          .filter(c => c.featured)
+          .slice(0, 3)
+          .map(c => ({ ...c, price: this.formatPrice(c.price) }));
+      },
+      error: () => {
+        this.featuredCourses = COURSES
+          .filter(c => c.featured)
+          .slice(0, 3)
+          .map(c => ({ ...c, price: this.formatPrice(c.price) }));
+      }
+    });
   }
 
   formatPrice(price: number): string {
