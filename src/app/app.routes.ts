@@ -26,6 +26,18 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/verify-certificate/verify-certificate.component').then(m => m.VerifyCertificateComponent)
   },
   {
+    path: 'curso/:id',
+    loadComponent: () => import('./pages/course-detail/course-detail.component').then(m => m.CourseDetailComponent)
+  },
+  {
+    path: 'quiz/:courseId/:lessonId',
+    loadComponent: () => import('./pages/quiz/quiz.component').then(m => m.QuizComponent)
+  },
+  {
+    path: 'certificado/:courseId',
+    loadComponent: () => import('./pages/certificate/certificate.component').then(m => m.CertificateComponent)
+  },
+  {
     path: 'termos',
     loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent)
   },

@@ -15,7 +15,57 @@ export interface CourseDTO {
   duracaoEstimada: number;
   gratuito: boolean;
   preco: number;
-  instrutor: string;
+  instrutorId?: string;
+  instrutor?: string;
+  videoUrl?: string;
+  documentoUrl?: string;
+  modulos?: ModuleDTO[];
+}
+
+export interface ModuleDTO {
+  id: string;
+  titulo: string;
+  descricao?: string;
+  ordem: number;
+  cursoId: string;
+  aulas?: LessonDTO[];
+}
+
+export interface LessonDTO {
+  id: string;
+  titulo: string;
+  tipo: string;
+  ordem: number;
+  moduloId: string;
+  duracaoMin?: number;
+  publicado: boolean;
+  quizzes?: QuizDTO[];
+}
+
+export interface QuizDTO {
+  id: string;
+  licaoId: string;
+  titulo: string;
+  descricao?: string;
+  pontuacaoMaxima?: number;
+  tempoLimiteMin?: number;
+  notaCorte?: number;
+  tentativasMax?: number;
+  embaralhar?: boolean;
+  tipo?: string;
+  questoes?: QuestionDTO[];
+}
+
+export interface QuestionDTO {
+  id: string;
+  quizId: string;
+  texto?: string;
+  enunciado?: string;
+  tipo?: string;
+  opcoes?: string[];
+  respostaCorreta?: any;
+  pontos?: number;
+  ordem?: number;
 }
 
 export interface CertificateDTO {
@@ -49,8 +99,20 @@ export interface CertificationItem {
 })
 export class CourseApiService {
   private readonly baseUrl = 'http://localhost:4001/api';
+  // Caminho público onde o backend serve os ficheiros carregados (/uploads/**)
+  private readonly uploadsBase = this.baseUrl.replace(/\/api\/?$/, '') + '/uploads';
 
   constructor(private http: HttpClient) {}
+
+  // Converte a imagem devolvida pela API (URL absoluta do Unsplash ou caminho
+  // relativo "imagens/xxx.jpg" gravado pelo upload) numa URL utilizável no browser.
+  private resolveImage(url?: string): string {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url) || url.startsWith('//') || url.startsWith('data:')) {
+      return url;
+    }
+    return `${this.uploadsBase}/${url.replace(/^\//, '')}`;
+  }
 
   getCourses(): Observable<CourseItem[]> {
     return this.http.get<CourseDTO[]>('/api/courses').pipe(
@@ -59,9 +121,8 @@ export class CourseApiService {
     );
   }
 
-  getCourseById(id: string | number): Observable<CourseItem> {
+  getCourseById(id: string | number): Observable<CourseDTO> {
     return this.http.get<CourseDTO>(`/api/courses/${id}`).pipe(
-      map(dto => this.toCourseItem(dto)),
       catchError(() => throwError(() => new Error('Curso não encontrado')))
     );
   }
@@ -96,9 +157,9 @@ export class CourseApiService {
       modality: 'Online',
       certificate: !dto.gratuito,
       startDate: 'Consulte o catálogo',
-      featured: false,
+      featured: true,
       enrolled: false,
-      image: dto.imagemUrl || '',
+      image: this.resolveImage(dto.imagemUrl),
       certName: 'Certificado',
       certBg: '#f3f4f6',
       certColor: '#374151',

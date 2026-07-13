@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
@@ -74,14 +74,18 @@ import { AuthService } from '../../services/auth.service';
   `,
   styles: [``]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   isMenuOpen = false;
-  currentUser = this.storage.getCurrentUser();
+  currentUser: any = null;
 
   constructor(private router: Router, private storage: StorageService, private auth: AuthService) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       this.closeMenu();
     });
+  }
+
+  ngOnInit(): void {
+    this.currentUser = this.storage.getCurrentUser();
   }
 
   toggleMenu() {

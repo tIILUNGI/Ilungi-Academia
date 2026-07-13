@@ -368,4 +368,15 @@ export class StorageService {
       this.saveCommunityPosts(posts);
     }
   }
+
+  getQuizResult(courseId: string | number): any {
+    const key = `quizResult_${courseId}`;
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  setQuizResult(courseId: string | number, result: any): void {
+    const key = `quizResult_${courseId}`;
+    localStorage.setItem(key, JSON.stringify(result));
+  }
 }
